@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de Usuario Exhaustivo — Sistema de Gestión de Ensayos CTM</title>
+  <style>
+    :root {
+      --color-primary: #1a5276;
+      --color-accent: #2471a3;
+      --color-border: #d5dbdb;
+      --color-bg-alt: #f4f6f7;
+      --color-text: #1c2833;
+      --color-muted: #566573;
+      --font-main: "Segoe UI", system-ui, -apple-system, sans-serif;
+      --font-mono: "Consolas", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-main);
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: var(--color-text);
+      background: #fff;
+    }
+
+    /* ── Encabezado fijo para impresión / PDF ── */
+    .print-header {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 2.2cm 1.8cm 2cm 1.8cm;
+      }
+
+      .print-header {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1.6cm;
+        padding: 0.3cm 1.8cm 0;
+        border-bottom: 2px solid var(--color-primary);
+        background: #fff;
+        z-index: 9999;
+      }
+
+      .print-header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 8pt;
+        color: var(--color-muted);
+      }
+
+      .print-header-title {
+        font-weight: 700;
+        color: var(--color-primary);
+        font-size: 9pt;
+      }
+
+      body {
+        padding-top: 1.8cm;
+      }
+
+      .no-print { display: none !important; }
+
+      .page-break { page-break-before: always; }
+
+      a { color: inherit; text-decoration: none; }
+
+      .toc a::after { content: leader(".") " " target-counter(attr(href url), page); }
+
+      h2, h3 { page-break-after: avoid; }
+      table, figure { page-break-inside: avoid; }
+    }
+
+    /* ── Pantalla ── */
+    @media screen {
+      body { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+      .print-banner {
+        background: var(--color-bg-alt);
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 2rem;
+        font-size: 9.5pt;
+        color: var(--color-muted);
+      }
+      .print-banner strong { color: var(--color-primary); }
+    }
+
+    /* ── Portada ── */
+    .cover {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      border-bottom: 3px solid var(--color-primary);
+      margin-bottom: 2.5rem;
+    }
+    .cover h1 {
+      font-size: 22pt;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+    .cover .subtitle { font-size: 13pt; color: var(--color-accent); margin-bottom: 1.5rem; }
+    .cover .meta { font-size: 10pt; color: var(--color-muted); }
+    .cover .meta p { margin: 0.25rem 0; }
+
+    /* ── Tipografía ── */
+    h2.chapter {
+      font-size: 16pt;
+      color: var(--color-primary);
+      border-bottom: 2px solid var(--color-accent);
+      padding-bottom: 0.35rem;
+      margin: 2rem 0 1rem;
+    }
+    h3.section {
+      font-size: 12pt;
+      color: var(--color-accent);
+      margin: 1.25rem 0 0.5rem;
+    }
+    h4.subsection {
+      font-size: 10.5pt;
+      color: var(--color-text);
+      margin: 0.85rem 0 0.35rem;
+      font-weight: 600;
+    }
+    p { margin-bottom: 0.6rem; }
+    ul, ol { margin: 0.4rem 0 0.75rem 1.4rem; }
+    li { margin-bottom: 0.25rem; }
+
+    /* ── Índice ── */
+    .toc {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .toc h2 { font-size: 14pt; color: var(--color-primary); margin-bottom: 0.75rem; border: none; }
+    .toc-chapter { font-weight: 700; color: var(--color-primary); margin: 0.6rem 0 0.2rem; font-size: 10pt; }
+    .toc ul { list-style: none; margin: 0 0 0 0.75rem; padding: 0; }
+    .toc li { font-size: 9.5pt; margin: 0.12rem 0; }
+    .toc a { color: var(--color-accent); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ── Tablas ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.6rem 0 1rem;
+      font-size: 9.5pt;
+    }
+    th, td {
+      border: 1px solid var(--color-border);
+      padding: 0.35rem 0.55rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--color-primary); color: #fff; font-weight: 600; }
+    tr:nth-child(even) td { background: var(--color-bg-alt); }
+
+    /* ── Cajas ── */
+    .note, .warning, .result {
+      border-radius: 4px;
+      padding: 0.6rem 0.85rem;
+      margin: 0.65rem 0;
+      font-size: 9.5pt;
+    }
+    .note { background: #ebf5fb; border-left: 4px solid var(--color-accent); }
+    .warning { background: #fef9e7; border-left: 4px solid #f39c12; }
+    .result { background: #eafaf1; border-left: 4px solid #27ae60; }
+
+    /* ── Flujo ── */
+    .flow {
+      font-family: var(--font-mono);
+      font-size: 8.5pt;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      padding: 0.75rem 1rem;
+      margin: 0.65rem 0;
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    /* ── Pasos numerados ── */
+    .steps { counter-reset: step; list-style: none; margin-left: 0; padding: 0; }
+    .steps > li {
+      counter-increment: step;
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 0.45rem;
+    }
+    .steps > li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.05rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      background: var(--color-primary);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 8pt;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.4rem;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 8.5pt;
+      background: var(--color-bg-alt);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+    }
+
+    pre {
+      font-family: var(--font-mono);
+      font-size: 8.5pt;
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 0.6rem 0;
+    }
+
+    .checklist { list-style: none; margin-left: 0; }
+    .checklist li::before { content: "☐ "; }
+  </style>
+</head>
+<body>
+
+<!-- Encabezado repetido en cada página al imprimir / exportar PDF -->
+<div class="print-header" aria-hidden="true">
+  <div class="print-header-inner">
+    <span class="print-header-title">Manual de Usuario — Sistema de Gestión de Ensayos CTM</span>
+    <span>CTM · gestion.ctmueble.com.ar · v1.0</span>
+  </div>
+</div>
+
+<div class="print-banner no-print">
+  <strong>Exportar a PDF:</strong> use <em>Ctrl+P</em> (o Cmd+P en Mac) → destino <em>Guardar como PDF</em>.
+  Active <em>Gráficos de fondo</em> si desea conservar colores de tablas. El encabezado se repetirá en cada página.
+</div>
+
+<!-- ═══════════════ PORTADA ═══════════════ -->
+<header class="cover" id="portada">
+  <h1>Manual de Usuario Exhaustivo</h1>
+  <p class="subtitle">Sistema de Gestión de Ensayos — CTM</p>
+  <div class="meta">
+    <p><strong>Versión:</strong> 1.0</p>
+    <p><strong>Plataforma:</strong> oficina.ctmueble.com.ar</p>
+    <p><strong>Fecha:</strong> Mayo 2026</p>
+    <p><strong>Audiencia:</strong> usuarios administrativos, clientes y personal de laboratorio</p>
+  </div>
+</header>
+
+<!-- ═══════════════ ÍNDICE ═══════════════ -->
+<nav class="toc" id="indice">
+  <h2>Índice general</h2>
+
+  <p class="toc-chapter"><a href="#cap1">Capítulo 1 — Introducción y alcance</a></p>
+  <ul>
+    <li><a href="#s1-1">1.1 Objetivo del manual</a></li>
+    <li><a href="#s1-2">1.2 Perfiles de usuario</a></li>
+    <li><a href="#s1-3">1.3 Flujo general del ensayo</a></li>
+    <li><a href="#s1-4">1.4 Documentos generados</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap2">Capítulo 2 — Inicio de sesión</a></p>
+  <ul>
+    <li><a href="#s2-1">2.1 Requisitos previos</a></li>
+    <li><a href="#s2-2">2.2 Acceder al sistema</a></li>
+    <li><a href="#s2-3">2.3 Selección de laboratorio y perfil</a></li>
+    <li><a href="#s2-4">2.4 Cierre de sesión y renovación de token</a></li>
+    <li><a href="#s2-5">2.5 Problemas frecuentes de acceso</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap3">Capítulo 3 — Configuración del sistema (variables de entorno)</a></p>
+  <ul>
+    <li><a href="#s3-1">3.1 Qué son las variables de entorno</a></li>
+    <li><a href="#s3-2">3.2 Acceder al módulo de configuración</a></li>
+    <li><a href="#s3-3">3.3 Consultar variables existentes</a></li>
+    <li><a href="#s3-4">3.4 Modificar una variable</a></li>
+    <li><a href="#s3-5">3.5 Agregar variable personalizada</a></li>
+    <li><a href="#s3-6">3.6 Eliminar una variable</a></li>
+    <li><a href="#s3-7">3.7 Catálogo de variables predefinidas</a></li>
+    <li><a href="#s3-8">3.8 Impacto en documentos PDF</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap4">Capítulo 4 — Sistema de clientes y empresas</a></p>
+  <ul>
+    <li><a href="#s4-1">4.1 Conceptos: empresa, cliente, persona y snapshot</a></li>
+    <li><a href="#s4-2">4.2 Buscar empresa por CUIT</a></li>
+    <li><a href="#s4-3">4.3 Sincronizar datos desde ARCA/AFIP</a></li>
+    <li><a href="#s4-4">4.4 Crear empresa manualmente</a></li>
+    <li><a href="#s4-5">4.5 Gestionar direcciones</a></li>
+    <li><a href="#s4-6">4.6 Gestionar representantes y contactos</a></li>
+    <li><a href="#s4-7">4.7 Alta de cliente completo</a></li>
+    <li><a href="#s4-8">4.8 Datos de facturación alternativa</a></li>
+    <li><a href="#s4-9">4.9 Buscar, editar y eliminar clientes</a></li>
+    <li><a href="#s4-10">4.10 Clientes agendados (laboratorio)</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap5">Capítulo 5 — Solicitud de ensayo</a></p>
+  <ul>
+    <li><a href="#s5-1">5.1 Cuándo y quién puede crear una solicitud</a></li>
+    <li><a href="#s5-2">5.2 Paso 1: Ingresar al módulo de ensayos</a></li>
+    <li><a href="#s5-3">5.3 Paso 2: Iniciar nueva solicitud</a></li>
+    <li><a href="#s5-4">5.4 Paso 3: Seleccionar o cargar el cliente → <em>Cap. 4</em></a></li>
+    <li><a href="#s5-5">5.5 Paso 4: Seleccionar contacto del ensayo</a></li>
+    <li><a href="#s5-6">5.6 Paso 5: Elegir tipo de ensayo</a></li>
+    <li><a href="#s5-7">5.7 Paso 6: Cargar datos del producto/material</a></li>
+    <li><a href="#s5-8">5.8 Paso 7: Observaciones</a></li>
+    <li><a href="#s5-9">5.9 Paso 8: Datos de facturación</a></li>
+    <li><a href="#s5-10">5.10 Paso 9: Confirmar y generar solicitud</a></li>
+    <li><a href="#s5-11">5.11 Resultado esperado y código de seguimiento</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap6">Capítulo 6 — Evaluación de la solicitud (laboratorio)</a></p>
+  <ul>
+    <li><a href="#s6-1">6.1 Estados iniciales</a></li>
+    <li><a href="#s6-2">6.2 Aprobar solicitud (ACCEPT)</a></li>
+    <li><a href="#s6-3">6.3 Rechazar solicitud (REJECT)</a></li>
+    <li><a href="#s6-4">6.4 Cancelar ensayo (CANCEL)</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap7">Capítulo 7 — Generación de contrato</a></p>
+  <ul>
+    <li><a href="#s7-1">7.1 Requisitos previos</a></li>
+    <li><a href="#s7-2">7.2 Paso 1: Abrir ensayo aprobado</a></li>
+    <li><a href="#s7-3">7.3 Paso 2: Definir términos del servicio</a></li>
+    <li><a href="#s7-4">7.4 Paso 3: Generar contrato F-PC13-02</a></li>
+    <li><a href="#s7-5">7.5 Paso 4: Verificar estado y documento</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap8">Capítulo 8 — Recepción de muestras</a></p>
+  <ul>
+    <li><a href="#s8-1">8.1 Requisitos previos</a></li>
+    <li><a href="#s8-2">8.2 Paso 1: Localizar ensayo con contrato</a></li>
+    <li><a href="#s8-3">8.3 Paso 2: Ingresar a recepción</a></li>
+    <li><a href="#s8-4">8.4 Paso 3: Decidir aceptación o rechazo</a></li>
+    <li><a href="#s8-5">8.5 Paso 4a: Rechazo — cancelación</a></li>
+    <li><a href="#s8-6">8.6 Paso 4b: Aceptación — cantidades</a></li>
+    <li><a href="#s8-7">8.7 Paso 5: Dimensiones y acondicionamiento</a></li>
+    <li><a href="#s8-8">8.8 Paso 6: Confirmar recepción</a></li>
+    <li><a href="#s8-9">8.9 Resultados automáticos del sistema</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap9">Capítulo 9 — Carga de resultados</a></p>
+  <ul>
+    <li><a href="#s9-1">9.1 Requisitos previos</a></li>
+    <li><a href="#s9-2">9.2 Paso 1: Abrir orden de trabajo</a></li>
+    <li><a href="#s9-3">9.3 Paso 2: Visualizar muestras</a></li>
+    <li><a href="#s9-4">9.4 Paso 3: Ingresar resultado por muestra</a></li>
+    <li><a href="#s9-5">9.5 Paso 4: Guardar resultados</a></li>
+    <li><a href="#s9-6">9.6 Validaciones del sistema</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap10">Capítulo 10 — Emisión de informe</a></p>
+  <ul>
+    <li><a href="#s10-1">10.1 Requisitos previos</a></li>
+    <li><a href="#s10-2">10.2 Paso 1: Verificar completitud</a></li>
+    <li><a href="#s10-3">10.3 Paso 2: Cerrar orden y emitir informe</a></li>
+    <li><a href="#s10-4">10.4 Paso 3: Descargar F-PC15-01</a></li>
+    <li><a href="#s10-5">10.5 Copias y modificaciones</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap11">Capítulo 11 — Gestión documental</a></p>
+  <ul>
+    <li><a href="#s11-1">11.1 Tipos de documento</a></li>
+    <li><a href="#s11-2">11.2 Consultar documentos de un ensayo</a></li>
+    <li><a href="#s11-3">11.3 Descargar por ID</a></li>
+    <li><a href="#s11-4">11.4 Descargar por tipo</a></li>
+    <li><a href="#s11-5">11.5 Almacenamiento local y R2</a></li>
+    <li><a href="#s11-6">11.6 Previsualización de plantillas</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap12">Capítulo 12 — Auditoría y trazabilidad</a></p>
+  <ul>
+    <li><a href="#s12-1">12.1 Auditoría de ensayos</a></li>
+    <li><a href="#s12-2">12.2 Auditoría de órdenes de trabajo</a></li>
+    <li><a href="#s12-3">12.3 Eventos principales</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap13">Capítulo 13 — Errores frecuentes</a></p>
+  <p class="toc-chapter"><a href="#cap14">Capítulo 14 — Glosario</a></p>
+  <p class="toc-chapter"><a href="#cap15">Capítulo 15 — Checklist operativo</a></p>
+</nav>
+
+<!-- ═══════════════ CAPÍTULO 1 ═══════════════ -->
+<section id="cap1" class="page-break">
+  <h2 class="chapter">Capítulo 1 — Introducción y alcance</h2>
+
+  <h3 class="section" id="s1-1">1.1 Objetivo del manual</h3>
+  <p>Este manual describe, paso a paso y con el detalle necesario para operar en producción, el <strong>Sistema de Gestión de Ensayos del CTM</strong> (Centro Tecnológico del Mueble). Cubre desde el ingreso al sistema hasta la emisión de informes y la gestión de documentos PDF asociados a cada ensayo.</p>
+
+  <h3 class="section" id="s1-2">1.2 Perfiles de usuario</h3>
+  <table>
+    <thead><tr><th>Perfil</th><th>Código</th><th>Operaciones principales</th></tr></thead>
+    <tbody>
+      <tr><td>Cliente</td><td><code>CLIENT</code></td><td>Alta de clientes, solicitud de ensayos, consulta y descarga de documentos</td></tr>
+      <tr><td>Laboratorio</td><td><code>LABORATORY</code></td><td>Aprobación, contratos, recepción, resultados, informes, configuración</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s1-3">1.3 Flujo general del ensayo</h3>
+  <div class="flow">Solicitud (REQUESTED)
+  → Aprobación (ACCEPTED) o Rechazo (REJECTED)
+  → Contrato (SERVICE_AGREEMENT_MADED)
+  → Recepción de muestras → Orden de trabajo (IN_WORK)
+  → Carga de resultados
+  → Emisión de informe (COMPLETED)
+
+Estados terminales: REJECTED · CANCELLED</div>
+
+  <h3 class="section" id="s1-4">1.4 Documentos generados</h3>
+  <table>
+    <thead><tr><th>Código</th><th>Nombre</th><th>Momento</th></tr></thead>
+    <tbody>
+      <tr><td>F-PC13-01</td><td>Solicitud de ensayo</td><td>Al crear solicitud</td></tr>
+      <tr><td>F-PC13-02</td><td>Contrato de servicio</td><td>Al generar contrato</td></tr>
+      <tr><td>F-PC16-01</td><td>Registro recepción muestras</td><td>Al aceptar muestras</td></tr>
+      <tr><td>F-PC16-02</td><td>Orden de trabajo</td><td>Flujo laboratorio</td></tr>
+      <tr><td>F-PC15-01</td><td>Informe de ensayo</td><td>Al emitir informe</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════ CAPÍTULO 2 ═══════════════ -->
+<section id="cap2" class="page-break">
+  <h2 class="chapter">Capítulo 2 — Inicio de sesión</h2>
+
+  <h3 class="section" id="s2-1">2.1 Requisitos previos</h3>
+  <ul>
+    <li>Usuario y contraseña activos.</li>
+    <li>Navegador actualizado (Chrome, Firefox o Edge).</li>
+    <li>URL: <strong>oficina.ctmueble.com.ar</strong>.</li>
+  </ul>
+
+  <h3 class="section" id="s2-2">2.2 Acceder al sistema</h3>
+  <ol class="steps">
+    <li>Abrir la pantalla de <strong>Inicio de sesión</strong>.</li>
+    <li>Ingresar correo electrónico y contraseña.</li>
+    <li>Presionar <strong>Ingresar</strong>.</li>
+  </ol>
+  <div class="result"><strong>Resultado esperado:</strong> acceso al panel principal con módulos según perfil.</div>
+
+  <h3 class="section" id="s2-3">2.3 Selección de laboratorio y perfil</h3>
+  <ol class="steps">
+    <li>Ir a configuración de usuario o selector de laboratorio.</li>
+    <li>Elegir el laboratorio activo.</li>
+    <li>Si corresponde, cambiar perfil (<code>CLIENT</code> / <code>LABORATORY</code>).</li>
+  </ol>
+
+  <h3 class="section" id="s2-4">2.4 Cierre de sesión y renovación de token</h3>
+  <p>Use <strong>Salir</strong> para cerrar sesión. Si la sesión expira, ingrese nuevamente. El sistema puede renovar el token con <em>refresh token</em> si la sesión sigue vigente.</p>
+
+  <h3 class="section" id="s2-5">2.5 Problemas frecuentes de acceso</h3>
+  <table>
+    <thead><tr><th>Situación</th><th>Causa</th><th>Acción</th></tr></thead>
+    <tbody>
+      <tr><td>Credenciales incorrectas</td><td>Datos erróneos</td><td>Verificar o solicitar restablecimiento</td></tr>
+      <tr><td>Demasiados intentos</td><td>Rate limit</td><td>Esperar e intentar de nuevo</td></tr>
+      <tr><td>Acceso denegado</td><td>Perfil incorrecto</td><td>Cambiar a LABORATORY</td></tr>
+      <tr><td>Token inválido</td><td>Sesión vencida</td><td>Cerrar sesión e ingresar</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════ CAPÍTULO 3 ═══════════════ -->
+<section id="cap3" class="page-break">
+  <h2 class="chapter">Capítulo 3 — Configuración del sistema (variables de entorno)</h2>
+
+  <h3 class="section" id="s3-1">3.1 Qué son las variables de entorno</h3>
+  <p>Parámetros de negocio almacenados en la base de datos (<code>environment_variables</code>) que alimentan las plantillas PDF. Definen datos institucionales: razón social, CUIT, domicilio, director, datos bancarios, incertidumbre.</p>
+  <div class="note">Solo usuarios con perfil <strong>LABORATORY</strong> pueden consultar y modificar estas variables.</div>
+
+  <h3 class="section" id="s3-2">3.2 Acceder al módulo</h3>
+  <ol class="steps">
+    <li>Iniciar sesión con perfil LABORATORY.</li>
+    <li>Ir a <strong>Configuración → Variables de entorno</strong> (API: <code>GET /env/fetch</code>).</li>
+  </ol>
+
+  <h3 class="section" id="s3-3">3.3 Consultar variables existentes</h3>
+  <p>Revisar identificador, etiqueta, tipo y valor. Para una variable puntual: <code>GET /env/get?id=...</code></p>
+
+  <h3 class="section" id="s3-4">3.4 Modificar una variable</h3>
+  <ol class="steps">
+    <li>Seleccionar la variable.</li>
+    <li>Ingresar nuevo valor según tipo: TEXT, NUMBER, DECIMAL o TIMESTAMP.</li>
+    <li>Guardar (<code>PUT /env/update?id=...</code>).</li>
+  </ol>
+  <div class="result">Los documentos generados <em>a partir de ese momento</em> incluirán el valor actualizado.</div>
+
+  <h3 class="section" id="s3-5">3.5 Agregar variable personalizada</h3>
+  <p>Completar ID, etiqueta, tipo y valor (<code>POST /env/add</code>).</p>
+
+  <h3 class="section" id="s3-6">3.6 Eliminar una variable</h3>
+  <p>Solo variables no <code>hardcoded</code> (<code>DELETE /env/delete?id=...</code>).</p>
+
+  <h3 class="section" id="s3-7">3.7 Catálogo de variables predefinidas</h3>
+  <table>
+    <thead><tr><th>ID</th><th>Etiqueta</th><th>Tipo</th></tr></thead>
+    <tbody>
+      <tr><td>SOCIAL_NAME</td><td>Razón social del Laboratorio</td><td>TEXT</td></tr>
+      <tr><td>CUIT</td><td>CUIT del Laboratorio</td><td>TEXT</td></tr>
+      <tr><td>LOCAL_ADDRESS</td><td>Domicilio</td><td>TEXT</td></tr>
+      <tr><td>LOCATION / PROVINCE</td><td>Localidad / Provincia</td><td>TEXT</td></tr>
+      <tr><td>PRESIDENT / PRESIDENT_DNI</td><td>Presidente / DNI</td><td>TEXT</td></tr>
+      <tr><td>BANK / BANK_CC / BANK_CBU</td><td>Datos bancarios</td><td>TEXT</td></tr>
+      <tr><td>UNCERTAINTY</td><td>Incertidumbre de medición</td><td>DECIMAL</td></tr>
+      <tr><td>LAB_DIRECTOR</td><td>Director del Laboratorio</td><td>TEXT</td></tr>
+      <tr><td>LAB_PHONE / LAB_MAIL</td><td>Contacto del laboratorio</td><td>TEXT</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s3-8">3.8 Impacto en documentos PDF</h3>
+  <p>Al generar formularios, el sistema obtiene variables en modo DATA, las fusiona con datos del ensayo y renderiza PDF con Handlebars + Puppeteer.</p>
+</section>
+
+<!-- ═══════════════ CAPÍTULO 4 ═══════════════ -->
+<section id="cap4" class="page-break">
+  <h2 class="chapter">Capítulo 4 — Sistema de clientes y empresas</h2>
+  <div class="note"><strong>Referencia cruzada:</strong> consultar este capítulo durante la carga de solicitud de ensayo (Cap. 5, pasos 3 y 4).</div>
+
+  <h3 class="section" id="s4-1">4.1 Conceptos</h3>
+  <table>
+    <thead><tr><th>Concepto</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>Empresa</td><td>Entidad fiscal por CUIT y razón social</td></tr>
+      <tr><td>Dirección</td><td>Domicilio operativo; varias por CUIT</td></tr>
+      <tr><td>Persona</td><td>Representante, contacto o tercero</td></tr>
+      <tr><td>Cliente</td><td>Vínculo: empresa + dirección + personas + facturación</td></tr>
+      <tr><td>Snapshot</td><td>Copia del cliente al crear el ensayo (<code>essays_client</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s4-2">4.2 Buscar empresa por CUIT</h3>
+  <ol class="steps">
+    <li>Ir a Empresas / Clientes.</li>
+    <li>Ingresar CUIT y buscar.</li>
+  </ol>
+
+  <h3 class="section" id="s4-3">4.3 Sincronizar desde ARCA/AFIP</h3>
+  <ol class="steps">
+    <li>Buscar CUIT inexistente.</li>
+    <li>Seleccionar <strong>Sincronizar desde padrón</strong> (<code>POST /bussiness/sync/</code>).</li>
+  </ol>
+  <div class="warning">Solo personas jurídicas. Si falla, crear manualmente (4.4).</div>
+
+  <h3 class="section" id="s4-4">4.4 Crear empresa manualmente</h3>
+  <p>CUIT + razón social → <code>POST /bussiness/manual/</code></p>
+
+  <h3 class="section" id="s4-5">4.5 Gestionar direcciones</h3>
+  <p>Agregar, editar o eliminar direcciones: calle, localidad, provincia, distrito opcional.</p>
+
+  <h3 class="section" id="s4-6">4.6 Representantes y contactos</h3>
+  <p><strong>Representante:</strong> opcional. <strong>Contacto del ensayo:</strong> obligatorio. Crear o seleccionar persona; vincular contactos adicionales.</p>
+
+  <h3 class="section" id="s4-7">4.7 Alta de cliente completo</h3>
+  <ol class="steps">
+    <li>CUIT de empresa.</li>
+    <li>Dirección.</li>
+    <li>Representante (opcional).</li>
+    <li>Contacto principal.</li>
+    <li>Facturación alternativa.</li>
+    <li>Guardar → <code>POST /clients/create</code>.</li>
+  </ol>
+  <p><strong>Atajo:</strong> <code>GET /bussiness/for-essay/?cuit=...</code> y <code>POST /clients/get-or-create-for-essay</code>.</p>
+
+  <h3 class="section" id="s4-8">4.8 Facturación alternativa</h3>
+  <p>CUIT, dirección, localidad, provincia y tributa IVA — opcionales en el cliente.</p>
+
+  <h3 class="section" id="s4-9">4.9 Buscar, editar y eliminar</h3>
+  <p><code>/clients/fetch</code> · <code>/clients/search</code> · <code>/clients/update</code> · <code>/clients/delete</code></p>
+
+  <h3 class="section" id="s4-10">4.10 Clientes agendados</h3>
+  <p>Laboratorio puede agendar clientes frecuentes: <code>POST /clients/scheduled</code>.</p>
+</section>
+
+<!-- ═══════════════ CAPÍTULO 5 ═══════════════ -->
+<section id="cap5" class="page-break">
+  <h2 class="chapter">Capítulo 5 — Solicitud de ensayo</h2>
+
+  <h3 class="section" id="s5-1">5.1 Cuándo y quién puede crear</h3>
+  <p>Perfiles CLIENT y LABORATORY. Cliente debe existir (Cap. 4). Estado inicial: <strong>REQUESTED</strong>. Se genera F-PC13-01.</p>
+
+  <h3 class="section" id="s5-2">5.2 Paso 1: Módulo de ensayos</h3>
+  <p>Panel → <strong>Ensayos</strong>. Filtrar por código, estado o fechas.</p>
+
+  <h3 class="section" id="s5-3">5.3 Paso 2: Nueva solicitud</h3>
+  <p><strong>Nueva solicitud</strong> / <strong>Crear ensayo</strong>.</p>
+
+  <h3 class="section" id="s5-4">5.4 Paso 3: Cliente</h3>
+  <h4 class="subsection">Opción A — Cliente existente</h4>
+  <p>Buscar por CUIT o nombre → seleccionar.</p>
+  <h4 class="subsection">Opción B — Cliente nuevo</h4>
+  <p>Ingresar CUIT → sincronizar/crear empresa → completar datos → <a href="#cap4">Capítulo 4</a>.</p>
+  <div class="note">El sistema crea snapshot en <code>essays_client</code> al confirmar.</div>
+
+  <h3 class="section" id="s5-5">5.5 Paso 4: Contacto del ensayo</h3>
+  <p>Seleccionar persona de contacto. Verificar mail y teléfono.</p>
+
+  <h3 class="section" id="s5-6">5.6 Paso 5: Tipo de ensayo</h3>
+  <p>Selector de tipo (<code>GET /essays/get-types</code>).</p>
+
+  <h3 class="section" id="s5-7">5.7 Paso 6: Datos del producto/material</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Req.</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>Plantilla</td><td>Sí</td><td><code>elements.template</code> — precarga producto, fabricante, país</td></tr>
+      <tr><td>Fecha</td><td>Sí</td><td><code>yyyy-MM-dd</code></td></tr>
+      <tr><td>Nº de lote</td><td>No</td><td>Opcional</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s5-8">5.8 Paso 7: Observaciones</h3>
+  <p>Texto libre: condiciones especiales, referencias, instrucciones de recepción.</p>
+
+  <h3 class="section" id="s5-9">5.9 Paso 8: Facturación</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Req.</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td>CUIT a facturar</td><td>Sí</td><td>Debe existir en empresas</td></tr>
+      <tr><td>Dirección</td><td>No</td><td>Puede heredarse del cliente</td></tr>
+      <tr><td>Monto</td><td>No</td><td>CLIENT no puede fijar monto</td></tr>
+      <tr><td>Tributa IVA</td><td>Sí</td><td>Default: no</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s5-10">5.10 Paso 9: Confirmar</h3>
+  <ol class="steps">
+    <li>Revisar resumen.</li>
+    <li>Confirmar → <code>POST /essays/create</code>.</li>
+  </ol>
+  <p>Sistema genera código (<code>yyyymmdd</code>+letra), registros en BD, auditoría y F-PC13-01.</p>
+
+  <h3 class="section" id="s5-11">5.11 Resultado esperado</h3>
+  <div class="result">Estado REQUESTED · código de seguimiento · F-PC13-01 descargable</div>
+</section>
+
+<!-- ═══════════════ CAPÍTULO 6-7 ═══════════════ -->
+<section id="cap6" class="page-break">
+  <h2 class="chapter">Capítulo 6 — Evaluación de la solicitud</h2>
+  <h3 class="section" id="s6-1">6.1 Estados iniciales</h3>
+  <p>Solo desde <strong>REQUESTED</strong> se aprueba o rechaza.</p>
+  <h3 class="section" id="s6-2">6.2 Aprobar (ACCEPT)</h3>
+  <p>Abrir ensayo → <strong>Aprobar</strong> → estado ACCEPTED.</p>
+  <h3 class="section" id="s6-3">6.3 Rechazar (REJECT)</h3>
+  <p>Observaciones opcionales → <strong>Rechazar</strong> → REJECTED.</p>
+  <h3 class="section" id="s6-4">6.4 Cancelar (CANCEL)</h3>
+  <p>Motivo en observaciones → CANCELLED.</p>
+</section>
+
+<section id="cap7" class="page-break">
+  <h2 class="chapter">Capítulo 7 — Generación de contrato</h2>
+  <h3 class="section" id="s7-1">7.1 Requisitos</h3>
+  <p>Estado ACCEPTED · perfil LABORATORY.</p>
+  <h3 class="section" id="s7-2">7.2 Paso 1: Abrir ensayo aprobado</h3>
+  <p>Filtrar ACCEPTED → abrir detalle.</p>
+  <h3 class="section" id="s7-3">7.3 Paso 2: Términos</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>days_to_do</td><td>Plazo en días</td></tr>
+      <tr><td>price</td><td>Precio acordado</td></tr>
+      <tr><td>samples_conservation_days</td><td>Días conservación muestras</td></tr>
+    </tbody>
+  </table>
+  <h3 class="section" id="s7-4">7.4 Paso 3: Generar F-PC13-02</h3>
+  <p><strong>Generar contrato</strong> → <code>POST /essays/generate-contract</code></p>
+  <h3 class="section" id="s7-5">7.5 Paso 4: Verificar</h3>
+  <div class="result">Estado SERVICE_AGREEMENT_MADED · F-PC13-02 disponible</div>
+</section>
+
+<!-- ═══════════════ CAPÍTULO 8-9 ═══════════════ -->
+<section id="cap8" class="page-break">
+  <h2 class="chapter">Capítulo 8 — Recepción de muestras</h2>
+  <h3 class="section" id="s8-1">8.1 Requisitos</h3>
+  <p>SERVICE_AGREEMENT_MADED · LABORATORY · muestras físicas recibidas.</p>
+  <h3 class="section" id="s8-2">8.2 Paso 1: Localizar ensayo</h3>
+  <p>Buscar por código o CUIT.</p>
+  <h3 class="section" id="s8-3">8.3 Paso 2: Recepción</h3>
+  <p><strong>Recepción de muestras</strong> → <code>POST /samples/receive-samples</code></p>
+  <h3 class="section" id="s8-4">8.4 Paso 3: Aceptación o rechazo</h3>
+  <p><code>accepted: true/false</code></p>
+  <h3 class="section" id="s8-5">8.5 Paso 4a: Rechazo</h3>
+  <p>Observaciones → ensayo CANCELLED. Sin OT ni muestras.</p>
+  <h3 class="section" id="s8-6">8.6 Paso 4b: Aceptación — cantidades</h3>
+  <p><code>samples_count</code> y <code>countersamples_count</code> (al menos uno &gt; 0).</p>
+  <h3 class="section" id="s8-7">8.7 Paso 5: Dimensiones</h3>
+  <p>height, width, thickness (cm) · internal_conditioning · observations.</p>
+  <h3 class="section" id="s8-8">8.8 Paso 6: Confirmar</h3>
+  <p>Revisar y confirmar.</p>
+  <h3 class="section" id="s8-9">8.9 Resultados automáticos</h3>
+  <ul>
+    <li>Orden de trabajo con código y plazo de informe</li>
+    <li>Muestras con correlativos</li>
+    <li>Estado IN_WORK</li>
+    <li>F-PC16-01 generado</li>
+    <li>Auditoría SAMPLES_RECEIVED</li>
+  </ul>
+</section>
+
+<section id="cap9" class="page-break">
+  <h2 class="chapter">Capítulo 9 — Carga de resultados</h2>
+  <h3 class="section" id="s9-1">9.1 Requisitos</h3>
+  <p>OT con muestras · LABORATORY · IN_WORK.</p>
+  <h3 class="section" id="s9-2">9.2 Paso 1: Abrir OT</h3>
+  <p>Órdenes de trabajo → buscar → abrir.</p>
+  <h3 class="section" id="s9-3">9.3 Paso 2: Visualizar muestras</h3>
+  <p>Código, correlativo, contramuestra, dimensiones, estado.</p>
+  <h3 class="section" id="s9-4">9.4 Paso 3: Resultado por muestra</h3>
+  <pre>{
+  "workOrderId": "uuid-orden",
+  "samples": [
+    { "id": "uuid-1", "result": 12.5 },
+    { "id": "uuid-2", "result": 12.3 }
+  ]
+}</pre>
+  <h3 class="section" id="s9-5">9.5 Paso 4: Guardar</h3>
+  <div class="result">Promedio recalculado · auditoría RESULTS_LOADED</div>
+  <h3 class="section" id="s9-6">9.6 Validaciones</h3>
+  <ul>
+    <li>Muestras deben pertenecer a la OT</li>
+    <li>Resultado numérico válido</li>
+    <li>Solo LABORATORY</li>
+  </ul>
+</section>
+
+<!-- ═══════════════ CAPÍTULO 10-11 ═══════════════ -->
+<section id="cap10" class="page-break">
+  <h2 class="chapter">Capítulo 10 — Emisión de informe</h2>
+  <h3 class="section" id="s10-1">10.1 Requisitos</h3>
+  <p>Mínimo 2 muestras con resultado · LABORATORY.</p>
+  <h3 class="section" id="s10-2">10.2 Paso 1: Verificar completitud</h3>
+  <p>Revisar resultados y promedio.</p>
+  <h3 class="section" id="s10-3">10.3 Paso 2: Emitir</h3>
+  <p><code>POST /samples/:id/close-and-emit-report</code> o <code>POST /essays/emit-report</code></p>
+  <h3 class="section" id="s10-4">10.4 Paso 3: Descargar F-PC15-01</h3>
+  <p>Capítulo 11 — Gestión documental.</p>
+  <h3 class="section" id="s10-5">10.5 Copias y modificaciones</h3>
+  <p>Copias numeradas o modificaciones si hubo cambios post-informe. Registrado en auditoría.</p>
+</section>
+
+<section id="cap11" class="page-break">
+  <h2 class="chapter">Capítulo 11 — Gestión documental</h2>
+  <h3 class="section" id="s11-1">11.1 Tipos de documento</h3>
+  <p>F-PC13-01 · F-PC13-02 · F-PC16-01 · F-PC16-02 · F-PC15-01</p>
+  <h3 class="section" id="s11-2">11.2 Consultar documentos</h3>
+  <p>Pestaña Documentos del ensayo o <code>GET /essays/get</code>.</p>
+  <h3 class="section" id="s11-3">11.3 Descargar por ID</h3>
+  <p><code>GET /essays/download-document?id=...</code> (rate limited)</p>
+  <h3 class="section" id="s11-4">11.4 Descargar por tipo</h3>
+  <p><code>GET /essays/download-document-by-type?essayId=...&amp;type=F-PC15-01</code></p>
+  <h3 class="section" id="s11-5">11.5 Almacenamiento</h3>
+  <p>Local (<code>STORAGE_DIR</code>) o Cloudflare R2 según configuración del servidor.</p>
+  <h3 class="section" id="s11-6">11.6 Previsualización</h3>
+  <p><code>GET /essays/debug/generate-document</code> — solo LABORATORY.</p>
+</section>
+
+<!-- ═══════════════ CAPÍTULOS 12-15 ═══════════════ -->
+<section id="cap12" class="page-break">
+  <h2 class="chapter">Capítulo 12 — Auditoría y trazabilidad</h2>
+  <h3 class="section" id="s12-1">12.1 Auditoría de ensayos</h3>
+  <p><code>GET /essays/audit-logs?id=...</code></p>
+  <h3 class="section" id="s12-2">12.2 Auditoría de OT</h3>
+  <p><code>GET /samples/:id/audit-logs</code></p>
+  <h3 class="section" id="s12-3">12.3 Eventos principales</h3>
+  <table>
+    <thead><tr><th>Evento</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>REQUEST_CREATED</td><td>Solicitud creada</td></tr>
+      <tr><td>REQUEST_APPROVED / REJECTED</td><td>Evaluación</td></tr>
+      <tr><td>CONTRACT_CREATED</td><td>Contrato generado</td></tr>
+      <tr><td>SAMPLES_RECEIVED</td><td>Muestras recepcionadas</td></tr>
+      <tr><td>RESULTS_LOADED</td><td>Resultados cargados</td></tr>
+      <tr><td>REPORT_ISSUED</td><td>Informe emitido</td></tr>
+      <tr><td>ESSAY_CANCELLED</td><td>Cancelación</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="cap13" class="page-break">
+  <h2 class="chapter">Capítulo 13 — Errores frecuentes</h2>
+  <table>
+    <thead><tr><th>Situación</th><th>Causa</th><th>Acción</th></tr></thead>
+    <tbody>
+      <tr><td>Acceso denegado</td><td>Perfil</td><td>LABORATORY o solicitar permisos</td></tr>
+      <tr><td>Empresa no encontrada</td><td>CUIT</td><td>Cap. 4 — sincronizar/crear</td></tr>
+      <tr><td>Cliente no encontrado</td><td>Alta pendiente</td><td>Cap. 4.7</td></tr>
+      <tr><td>Sin contrato</td><td>No ACCEPTED</td><td>Cap. 6 y 7</td></tr>
+      <tr><td>Sin informe</td><td>&lt; 2 resultados</td><td>Cap. 9</td></tr>
+      <tr><td>Rate limit</td><td>Demasiadas requests</td><td>Esperar</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="cap14">
+  <h2 class="chapter">Capítulo 14 — Glosario</h2>
+  <table>
+    <thead><tr><th>Término</th><th>Definición</th></tr></thead>
+    <tbody>
+      <tr><td>CUIT</td><td>Clave Única de Identificación Tributaria</td></tr>
+      <tr><td>Ensayo</td><td>Solicitud de evaluación técnica</td></tr>
+      <tr><td>Orden de trabajo</td><td>Instancia operativa del laboratorio</td></tr>
+      <tr><td>Muestra / Contramuestra</td><td>Unidad analizada / reserva</td></tr>
+      <tr><td>Snapshot</td><td>Copia histórica del cliente al crear ensayo</td></tr>
+      <tr><td>Variable de entorno</td><td>Parámetro que alimenta plantillas PDF</td></tr>
+      <tr><td>Auditoría</td><td>Registro de acciones (quién, qué, cuándo)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="cap15" class="page-break">
+  <h2 class="chapter">Capítulo 15 — Checklist operativo</h2>
+  <h3 class="section">Alta de cliente</h3>
+  <ul class="checklist">
+    <li>CUIT validado</li>
+    <li>Dirección cargada</li>
+    <li>Representante y contacto verificados</li>
+    <li>Facturación revisada</li>
+  </ul>
+  <h3 class="section">Solicitud de ensayo</h3>
+  <ul class="checklist">
+    <li>Cliente seleccionado (Cap. 4)</li>
+    <li>Tipo y plantilla completados</li>
+    <li>F-PC13-01 generado</li>
+  </ul>
+  <h3 class="section">Contrato y recepción</h3>
+  <ul class="checklist">
+    <li>Solicitud aprobada</li>
+    <li>F-PC13-02 generado</li>
+    <li>Muestras recepcionadas · F-PC16-01</li>
+  </ul>
+  <h3 class="section">Resultados e informe</h3>
+  <ul class="checklist">
+    <li>Resultados por muestra</li>
+    <li>Orden cerrada</li>
+    <li>F-PC15-01 descargado</li>
+  </ul>
+</section>
+
+<footer style="margin-top:3rem;padding-top:1rem;border-top:1px solid var(--color-border);font-size:8.5pt;color:var(--color-muted);text-align:center;">
+  Sistema de Gestión de Ensayos CTM — gestion.ctmueble.com.ar — Manual v1.0 — Mayo 2026
+</footer>
+
+</body>
+</html>

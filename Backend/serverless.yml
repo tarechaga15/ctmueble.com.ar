@@ -1,0 +1,58 @@
+service: gestion-ctmueble
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  memorySize: 1024
+  timeout: 30
+  environment:
+    NODE_ENV: ${self:provider.stage}
+  httpApi:
+    cors:
+      allowedOrigins:
+        - 'http://localhost:5173'
+        - 'https://oficina.ctmueble.com.ar'
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+        - X-CSRF-Token
+        - Idempotency-Key
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+
+functions:
+  api:
+    handler: src/handler.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+      - httpApi:
+          path: /
+          method: ANY
+
+package:
+  patterns:
+    - '!node_modules/.cache/**'
+    - '!*.md'
+    - '!.git/**'
+    - '!.env*'
+    - '!certs/**'
+    - '!*.key'
+    - '!*.pem'
+    - '!*.crt'
+    - '!storage/**'
+    - '!src/storage/**'
+    - '!tests/**'
+    - '!docs/**'
+    - '!db/**'
+    - '!*.sql'
+  individually: false

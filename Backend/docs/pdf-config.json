@@ -1,0 +1,174 @@
+{
+  "cover": {
+    "badge": "Centro Tecnológico del Mueble · CTM",
+    "title": "Análisis Funcional del Sistema de Gestión de Ensayos y Laboratorio",
+    "titleHighlight": "ctmueble.com.ar",
+    "subtitle": "Análisis Funcional del Sistema de Gestión de Ensayos y Laboratorio.",
+    "cardTitle": "Alcance del análisis:",
+    "cardDescription": "Análisis funcional del sistema de gestión de ensayos y laboratorio.",
+    "logos": {
+      "left": {
+        "enabled": true,
+        "src": "docs/assets/logo-ctm.png",
+        "alt": "CTM Oficina Virtual",
+        "height": "44px"
+      },
+      "right": {
+        "enabled": true,
+        "src": "docs/assets/logo.png",
+        "alt": "Laboratorio CTM",
+        "height": "44px"
+      }
+    },
+    "metadata": [
+      {
+        "label": "Sistema",
+        "value": "Plataforma Web de Gestión de Ensayos y Laboratorio (`gestion.ctmueble.com.ar`)"
+      },
+      {
+        "label": "Versión",
+        "value": "v{{version}}"
+      },
+      {
+        "label": "Fecha de emisión",
+        "value": "{{date}}"
+      },
+      {
+        "label": "Docente",
+        "value": "Leo Gómez"
+      },
+      {
+        "label": "Autores",
+        "value": "Aréchaga Tomás, Mansilla Jael"
+      }
+    ],
+    "footer": "Centro Tecnológico del Mueble (CTM)"
+  },
+  "headerFooter": {
+    "headerLeft": "Centro Tecnológico del Mueble (CTM)",
+    "headerRight": "ctmueble.com.ar — Análisis Funcional del Sistema de Gestión de Ensayos y Laboratorio",
+    "footerLeft": "Análisis Funcional del Sistema de Gestión de Ensayos y Laboratorio",
+    "showPageNumbers": true,
+    "logos": {
+      "left": {
+        "enabled": true,
+        "src": "docs/assets/logo-ctm.png",
+        "alt": "CTM",
+        "height": "16px"
+      },
+      "right": {
+        "enabled": true,
+        "src": "docs/assets/logo.png",
+        "alt": "Laboratorio CTM",
+        "height": "16px"
+      }
+    }
+  },
+  "palette": {
+    "primary": "#c72a33",
+    "onPrimary": "#ffffff",
+    "primaryLight": "#f8e4e6",
+    "primarySoft": "#fdf2f3",
+    "primaryAccent": "#f2c6ca",
+    "heading": "#1b080a",
+    "text": "#333333",
+    "textMuted": "#6b6b5a",
+    "textSubtle": "#888888",
+    "pageBg": "#ffffff",
+    "surface": "#f7f7ee",
+    "surfaceAlt": "#f0f0db",
+    "border": "#d8d8c4",
+    "borderLight": "#e5e5dc",
+    "calloutInfoBorder": "#c72a33",
+    "calloutInfoBg": "#f7f7ee",
+    "calloutWarnBorder": "#9e2129",
+    "calloutWarnBg": "#f0f0c7",
+    "mermaidTheme": "neutral"
+  },
+  "standaloneManuals": {
+    "userManual": {
+      "enabled": true,
+      "sourcePath": "docs/05-manuales-operativos-y-guia-cliente/02-MANUAL_USUARIO_FINAL.md",
+      "outputPdfPath": "docs/MANUAL_USUARIO_GUIA_PRACTICA_CTM.pdf",
+      "cover": {
+        "badge": "Centro Tecnológico del Mueble · CTM",
+        "title": "Manual de Usuario — Guía Práctica",
+        "titleHighlight": "oficina.ctmueble.com.ar",
+        "subtitle": "Guía paso a paso para clientes, personal administrativo y equipo técnico del laboratorio en la gestión integral de ensayos.",
+        "cardTitle": "Propósito del manual:",
+        "cardDescription": "Explica de forma práctica cómo ingresar a la Oficina Virtual, administrar empresas y clientes (carga manual o autocompletado auxiliar opcional ARCA), solicitar ensayos, formalizar contratos, recibir muestras, cargar resultados y descargar informes oficiales.",
+        "metadata": [
+          {
+            "label": "Sistema",
+            "value": "CTM Oficina Virtual (`oficina.ctmueble.com.ar` · `gestion.ctmueble.com.ar`)"
+          },
+          {
+            "label": "Versión",
+            "value": "v{{version}}"
+          },
+          {
+            "label": "Fecha de emisión",
+            "value": "{{date}}"
+          },
+          {
+            "label": "Alcance",
+            "value": "{{chaptersCount}} capítulos operativos · {{sectionsCount}} apartados con listas de control"
+          },
+          {
+            "label": "Destinatarios",
+            "value": "Administración y personal de laboratorio"
+          }
+        ],
+        "footer": "Centro Tecnológico del Mueble (CTM)"
+      },
+      "headerFooter": {
+        "headerLeft": "Centro Tecnológico del Mueble (CTM)",
+        "headerRight": "Manual de Usuario — Guía Práctica",
+        "footerLeft": "ctmueble.com.ar — Guía Práctica de Uso",
+        "showPageNumbers": true
+      }
+    },
+    "technicalManual": {
+      "enabled": true,
+      "sourcePath": "docs/05-manuales-operativos-y-guia-cliente/04-MANUAL_TECNICO_INSTALACION_Y_PUESTA_EN_FUNCIONAMIENTO.md",
+      "outputPdfPath": "docs/MANUAL_TECNICO_INSTALACION_Y_PUESTA_EN_FUNCIONAMIENTO_CTM.pdf",
+      "cover": {
+        "badge": "Centro Tecnológico del Mueble · CTM",
+        "title": "Manual Técnico",
+        "titleHighlight": "Instalación y Puesta en Funcionamiento",
+        "subtitle": "Referencia técnica para despliegue, configuración de entorno, migraciones de base de datos, seedeo inicial y mantenimiento operativo de `gestion.ctmueble.com.ar` y `oficina.ctmueble.com.ar`.",
+        "cardTitle": "Alcance técnico:",
+        "cardDescription": "Cubre arquitectura cloud/local, requisitos previos, variables `.env` por subsistema, ejecución de migraciones Umzug sobre PostgreSQL/Neon, seedeo global y granular, compilación del frontend React/Vite, pruebas automatizadas, despliegue en Vercel/R2 y troubleshooting.",
+        "metadata": [
+          {
+            "label": "Componentes",
+            "value": "Backend API Node/Express (`gestion.ctmueble.com.ar`) · Frontend React/Vite (`oficina.ctmueble.com.ar`)"
+          },
+          {
+            "label": "Versión",
+            "value": "v{{version}}"
+          },
+          {
+            "label": "Fecha de emisión",
+            "value": "{{date}}"
+          },
+          {
+            "label": "Contenido",
+            "value": "{{chaptersCount}} capítulos técnicos · {{sectionsCount}} secciones de configuración y operación"
+          },
+          {
+            "label": "Destinatarios",
+            "value": "Equipo de desarrollo, DevOps, infraestructura y administración técnica del sistema"
+          }
+        ],
+        "footer": "Centro Tecnológico del Mueble (CTM)"
+      },
+      "headerFooter": {
+        "headerLeft": "Centro Tecnológico del Mueble (CTM)",
+        "headerRight": "Manual Técnico — Instalación y Puesta en Funcionamiento",
+        "footerLeft": "ctmueble.com.ar — Manual Técnico Operativo",
+        "showPageNumbers": true
+      }
+    }
+  }
+}

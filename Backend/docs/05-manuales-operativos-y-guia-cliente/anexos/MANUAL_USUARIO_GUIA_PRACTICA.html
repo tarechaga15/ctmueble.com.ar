@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de usuario — Sistema de Gestión de Ensayos CTM</title>
+  <style>
+    :root {
+      --color-primary: #e41f2a;
+      --color-accent: #e41f2a;
+      --color-border: #d5dbdb;
+      --color-bg-alt: #f4f6f7;
+      --color-text: #1c2833;
+      --color-muted: #566573;
+      --font-main: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-main);
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: var(--color-text);
+      background: #fff;
+    }
+
+    .print-header { display: none; }
+
+    @media print {
+      @page { size: A4; margin: 2.2cm 1.8cm 2cm 1.8cm; }
+
+      .print-header {
+        display: block;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 1.6cm;
+        padding: 0.3cm 1.8cm 0;
+        border-bottom: 2px solid var(--color-primary);
+        background: #fff;
+        z-index: 9999;
+      }
+
+      .print-header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 8pt;
+        color: var(--color-muted);
+      }
+
+      .print-header-title {
+        font-weight: 700;
+        color: var(--color-primary);
+        font-size: 9pt;
+      }
+
+      body { padding-top: 1.8cm; }
+      .no-print { display: none !important; }
+      .page-break { page-break-before: always; }
+      a { color: inherit; text-decoration: none; }
+      h2, h3 { page-break-after: avoid; }
+      table { page-break-inside: avoid; }
+    }
+
+    @media screen {
+      body { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+      .print-banner {
+        background: var(--color-bg-alt);
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 2rem;
+        font-size: 9.5pt;
+        color: var(--color-muted);
+      }
+      .print-banner strong { color: var(--color-primary); }
+    }
+
+    .cover {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      border-bottom: 3px solid var(--color-primary);
+      margin-bottom: 2.5rem;
+    }
+    .cover h1 { font-size: 22pt; color: var(--color-primary); margin-bottom: 0.5rem; line-height: 1.25; }
+    .cover .subtitle { font-size: 13pt; color: var(--color-accent); margin-bottom: 1.5rem; }
+    .cover .meta { font-size: 10pt; color: var(--color-muted); }
+    .cover .meta p { margin: 0.25rem 0; }
+
+    h2.chapter {
+      font-size: 16pt;
+      color: var(--color-primary);
+      border-bottom: 2px solid var(--color-accent);
+      padding-bottom: 0.35rem;
+      margin: 2rem 0 1rem;
+    }
+    h3.section { font-size: 12pt; color: var(--color-accent); margin: 1.25rem 0 0.5rem; }
+    h4.subsection { font-size: 10.5pt; margin: 0.85rem 0 0.35rem; font-weight: 600; }
+    p { margin-bottom: 0.6rem; }
+    ul, ol { margin: 0.4rem 0 0.75rem 1.4rem; }
+    li { margin-bottom: 0.3rem; }
+
+    .toc {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .toc h2 { font-size: 14pt; color: var(--color-primary); margin-bottom: 0.75rem; border: none; }
+    .toc-chapter { font-weight: 700; color: var(--color-primary); margin: 0.6rem 0 0.2rem; font-size: 10pt; }
+    .toc ul { list-style: none; margin: 0 0 0 0.75rem; padding: 0; }
+    .toc li { font-size: 9.5pt; margin: 0.12rem 0; }
+    .toc a { color: var(--color-accent); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.6rem 0 1rem;
+      font-size: 9.5pt;
+    }
+    th, td {
+      border: 1px solid var(--color-border);
+      padding: 0.35rem 0.55rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--color-primary); color: #fff; font-weight: 600; }
+    tr:nth-child(even) td { background: var(--color-bg-alt); }
+
+    .note, .warning, .result, .tip {
+      border-radius: 4px;
+      padding: 0.6rem 0.85rem;
+      margin: 0.65rem 0;
+      font-size: 9.5pt;
+    }
+    .note { background: #ebf5fb; border-left: 4px solid var(--color-accent); }
+    .warning { background: #fef9e7; border-left: 4px solid #f39c12; }
+    .result { background: #eafaf1; border-left: 4px solid #27ae60; }
+    .tip { background: #f5eef8; border-left: 4px solid #8e44ad; }
+
+    .flow {
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 0.65rem 0;
+      line-height: 1.8;
+    }
+    .flow ol { margin: 0; padding-left: 1.2rem; }
+    .flow li { margin-bottom: 0.35rem; }
+
+    .steps { counter-reset: step; list-style: none; margin-left: 0; padding: 0; }
+    .steps > li {
+      counter-increment: step;
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .steps > li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0; top: 0.05rem;
+      width: 1.4rem; height: 1.4rem;
+      background: var(--color-primary);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 8pt;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.4rem;
+    }
+
+    .checklist { list-style: none; margin-left: 0; }
+    .checklist li::before { content: "☐ "; }
+
+    .estado { display: inline-block; background: #ebf5fb; padding: 0.1rem 0.45rem; border-radius: 3px; font-size: 9pt; }
+  </style>
+</head>
+<body>
+
+<div class="print-header" aria-hidden="true">
+  <div class="print-header-inner">
+    <span class="print-header-title">Guía de Usuario — Gestión de Ensayos CTM</span>
+    <span>Centro Tecnológico del Mueble · v1.0</span>
+  </div>
+</div>
+
+
+<header class="cover" id="portada">
+  <h1>Guía de Usuario</h1>
+  <p class="subtitle">Sistema de Gestión de Ensayos del Centro de Tecnología del Mueble</p>
+  <div class="meta">
+    <p><strong>Versión:</strong> 1.0</p>
+    <p><strong>Sitio web:</strong> oficina.ctmueble.com.ar</p>
+    <p><strong>Fecha:</strong> Mayo 2026</p>
+    <p><strong>Para quién es esta guía:</strong> clientes, personal administrativo y equipo de laboratorio</p>
+  </div>
+</header>
+
+<nav class="toc" id="indice">
+  <h2>Índice general</h2>
+
+  <p class="toc-chapter"><a href="#cap1">Capítulo 1 — Conozca el sistema</a></p>
+  <ul>
+    <li><a href="#s1-1">1.1 Para qué sirve esta guía</a></li>
+    <li><a href="#s1-2">1.2 Tipos de usuario</a></li>
+    <li><a href="#s1-3">1.3 Recorrido de un ensayo de punta a punta</a></li>
+    <li><a href="#s1-4">1.4 Papeles que genera el sistema</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap2">Capítulo 2 — Cómo ingresar al sistema</a></p>
+  <ul>
+    <li><a href="#s2-1">2.1 Qué necesita antes de empezar</a></li>
+    <li><a href="#s2-2">2.2 Iniciar sesión</a></li>
+    <li><a href="#s2-3">2.3 Elegir laboratorio y tipo de acceso</a></li>
+    <li><a href="#s2-4">2.4 Cerrar sesión</a></li>
+    <li><a href="#s2-5">2.5 Si no puede ingresar</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap3">Capítulo 3 — Configuración general del laboratorio</a></p>
+  <ul>
+    <li><a href="#s3-1">3.1 Qué datos se pueden configurar</a></li>
+    <li><a href="#s3-2">3.2 Dónde encontrar la configuración</a></li>
+    <li><a href="#s3-3">3.3 Ver los datos actuales</a></li>
+    <li><a href="#s3-4">3.4 Modificar un dato</a></li>
+    <li><a href="#s3-5">3.5 Agregar un dato nuevo</a></li>
+    <li><a href="#s3-6">3.6 Quitar un dato personalizado</a></li>
+    <li><a href="#s3-7">3.7 Listado de datos institucionales</a></li>
+    <li><a href="#s3-8">3.8 Cómo afectan los cambios a los documentos</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap4">Capítulo 4 — Clientes y empresas</a></p>
+  <ul>
+    <li><a href="#s4-1">4.1 Conceptos básicos</a></li>
+    <li><a href="#s4-2">4.2 Buscar una empresa por CUIT</a></li>
+    <li><a href="#s4-3">4.3 Traer datos desde AFIP</a></li>
+    <li><a href="#s4-4">4.4 Cargar una empresa a mano</a></li>
+    <li><a href="#s4-5">4.5 Administrar direcciones</a></li>
+    <li><a href="#s4-6">4.6 Representantes y contactos</a></li>
+    <li><a href="#s4-7">4.7 Dar de alta un cliente completo</a></li>
+    <li><a href="#s4-8">4.8 Datos de facturación distintos</a></li>
+    <li><a href="#s4-9">4.9 Buscar, modificar o quitar clientes</a></li>
+    <li><a href="#s4-10">4.10 Clientes favoritos del laboratorio</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap5">Capítulo 5 — Pedir un ensayo</a></p>
+  <ul>
+    <li><a href="#s5-1">5.1 Quién puede pedir un ensayo</a></li>
+    <li><a href="#s5-2">5.2 Paso 1: Entrar al área de ensayos</a></li>
+    <li><a href="#s5-3">5.3 Paso 2: Comenzar una solicitud nueva</a></li>
+    <li><a href="#s5-4">5.4 Paso 3: Indicar el cliente → <em>ver Cap. 4</em></a></li>
+    <li><a href="#s5-5">5.5 Paso 4: Elegir con quién hablará el laboratorio</a></li>
+    <li><a href="#s5-6">5.6 Paso 5: Elegir qué tipo de ensayo se necesita</a></li>
+    <li><a href="#s5-7">5.7 Paso 6: Describir el producto o material</a></li>
+    <li><a href="#s5-8">5.8 Paso 7: Escribir observaciones</a></li>
+    <li><a href="#s5-9">5.9 Paso 8: Completar datos de facturación</a></li>
+    <li><a href="#s5-10">5.10 Paso 9: Revisar y confirmar</a></li>
+    <li><a href="#s5-11">5.11 Qué obtiene al finalizar</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap6">Capítulo 6 — Revisar y decidir sobre la solicitud</a></p>
+  <ul>
+    <li><a href="#s6-1">6.1 Cuándo puede evaluarse una solicitud</a></li>
+    <li><a href="#s6-2">6.2 Aprobar la solicitud</a></li>
+    <li><a href="#s6-3">6.3 Rechazar la solicitud</a></li>
+    <li><a href="#s6-4">6.4 Cancelar un trámite</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap7">Capítulo 7 — Armar el contrato de servicio</a></p>
+  <ul>
+    <li><a href="#s7-1">7.1 Qué se necesita antes</a></li>
+    <li><a href="#s7-2">7.2 Paso 1: Abrir la solicitud aprobada</a></li>
+    <li><a href="#s7-3">7.3 Paso 2: Completar plazos y precio</a></li>
+    <li><a href="#s7-4">7.4 Paso 3: Generar el contrato</a></li>
+    <li><a href="#s7-5">7.5 Paso 4: Comprobar que quedó registrado</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap8">Capítulo 8 — Recibir las muestras en el laboratorio</a></p>
+  <ul>
+    <li><a href="#s8-1">8.1 Qué se necesita antes</a></li>
+    <li><a href="#s8-2">8.2 Paso 1: Encontrar el ensayo correspondiente</a></li>
+    <li><a href="#s8-3">8.3 Paso 2: Abrir la pantalla de recepción</a></li>
+    <li><a href="#s8-4">8.4 Paso 3: Decidir si se aceptan o no</a></li>
+    <li><a href="#s8-5">8.5 Paso 4a: Si no se aceptan las muestras</a></li>
+    <li><a href="#s8-6">8.6 Paso 4b: Si se aceptan — cuántas hay</a></li>
+    <li><a href="#s8-7">8.7 Paso 5: Medidas y observaciones</a></li>
+    <li><a href="#s8-8">8.8 Paso 6: Confirmar la recepción</a></li>
+    <li><a href="#s8-9">8.9 Qué hace el sistema automáticamente</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap9">Capítulo 9 — Cargar los resultados del ensayo</a></p>
+  <ul>
+    <li><a href="#s9-1">9.1 Qué se necesita antes</a></li>
+    <li><a href="#s9-2">9.2 Paso 1: Abrir la orden de trabajo</a></li>
+    <li><a href="#s9-3">9.3 Paso 2: Ver las muestras recibidas</a></li>
+    <li><a href="#s9-4">9.4 Paso 3: Escribir el resultado de cada muestra</a></li>
+    <li><a href="#s9-5">9.5 Paso 4: Guardar los resultados</a></li>
+    <li><a href="#s9-6">9.6 Qué controles realiza el sistema</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap10">Capítulo 10 — Emitir el informe final</a></p>
+  <ul>
+    <li><a href="#s10-1">10.1 Qué se necesita antes</a></li>
+    <li><a href="#s10-2">10.2 Paso 1: Revisar que todo esté completo</a></li>
+    <li><a href="#s10-3">10.3 Paso 2: Cerrar la orden y emitir el informe</a></li>
+    <li><a href="#s10-4">10.4 Paso 3: Descargar el informe</a></li>
+    <li><a href="#s10-5">10.5 Si hay que volver a emitir o hacer una copia</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap11">Capítulo 11 — Documentos y descargas</a></p>
+  <ul>
+    <li><a href="#s11-1">11.1 Qué documentos puede encontrar</a></li>
+    <li><a href="#s11-2">11.2 Ver los papeles de un ensayo</a></li>
+    <li><a href="#s11-3">11.3 Descargar un documento</a></li>
+    <li><a href="#s11-4">11.4 Buscar un documento por su tipo</a></li>
+    <li><a href="#s11-5">11.5 Dónde se guardan los archivos</a></li>
+    <li><a href="#s11-6">11.6 Vista previa antes de imprimir</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap12">Capítulo 12 — Historial y seguimiento</a></p>
+  <ul>
+    <li><a href="#s12-1">12.1 Ver qué pasó con un ensayo</a></li>
+    <li><a href="#s12-2">12.2 Ver qué pasó con una orden de trabajo</a></li>
+    <li><a href="#s12-3">12.3 Acciones que quedan registradas</a></li>
+  </ul>
+
+  <p class="toc-chapter"><a href="#cap13">Capítulo 13 — Problemas frecuentes</a></p>
+  <p class="toc-chapter"><a href="#cap14">Capítulo 14 — Palabras que usa el sistema</a></p>
+  <p class="toc-chapter"><a href="#cap15">Capítulo 15 — Listas de control</a></p>
+</nav>
+
+<!-- CAPÍTULO 1 -->
+<section id="cap1" class="page-break">
+  <h2 class="chapter">Capítulo 1 — Conozca el sistema</h2>
+
+  <h3 class="section" id="s1-1">1.1 Para qué sirve esta guía</h3>
+  <p>Esta guía explica, con palabras sencillas y paso a paso, cómo usar el sistema del <strong>Centro Tecnológico del Mueble (CTM)</strong> para gestionar ensayos de laboratorio: desde que un cliente pide un ensayo hasta que se entrega el informe final, pasando por el contrato, la recepción de muestras y la carga de resultados.</p>
+  <p>No hace falta conocimientos de informática avanzada: cada procedimiento indica qué pantalla abrir, qué datos completar y qué debería ocurrir al confirmar.</p>
+
+  <h3 class="section" id="s1-2">1.2 Tipos de usuario</h3>
+  <table>
+    <thead><tr><th>Quién es</th><th>Qué puede hacer en el sistema</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Cliente</strong></td>
+        <td>Registrar sus empresas y contactos, pedir ensayos, consultar el estado de sus trámites y descargar documentos que le correspondan.</td>
+      </tr>
+      <tr>
+        <td><strong>Personal de laboratorio</strong></td>
+        <td>Revisar y aprobar solicitudes, generar contratos, recibir muestras, cargar resultados, emitir informes, configurar datos del laboratorio y consultar el historial completo.</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="tip">Si su usuario puede actuar de las dos formas, el sistema le permitirá cambiar entre <em>modo cliente</em> y <em>modo laboratorio</em> según la tarea que deba realizar.</div>
+
+  <h3 class="section" id="s1-3">1.3 Recorrido de un ensayo de punta a punta</h3>
+  <div class="flow">
+    <ol>
+      <li>El cliente <strong>pide un ensayo</strong> → el trámite queda <span class="estado">Solicitado</span></li>
+      <li>El laboratorio <strong>aprueba o rechaza</strong> la solicitud → queda <span class="estado">Aprobado</span> o <span class="estado">Rechazado</span></li>
+      <li>Si fue aprobado, se arma el <strong>contrato de servicio</strong> → queda <span class="estado">Con contrato</span></li>
+      <li>Llegan las muestras y el laboratorio las <strong>recibe</strong> → se abre una <strong>orden de trabajo</strong> → queda <span class="estado">En análisis</span></li>
+      <li>Se cargan los <strong>resultados</strong> de cada muestra</li>
+      <li>Se <strong>emite el informe</strong> → el trámite queda <span class="estado">Finalizado</span></li>
+    </ol>
+  </div>
+  <p>Un trámite también puede quedar <span class="estado">Cancelado</span> si se decide no continuar o si las muestras no son aceptadas.</p>
+
+  <h3 class="section" id="s1-4">1.4 Papeles que genera el sistema</h3>
+  <table>
+    <thead><tr><th>Documento</th><th>Nombre</th><th>Cuándo aparece</th></tr></thead>
+    <tbody>
+      <tr><td>F-PC13-01</td><td>Solicitud de ensayo</td><td>Al confirmar el pedido</td></tr>
+      <tr><td>F-PC13-02</td><td>Contrato de servicio</td><td>Al generar el contrato</td></tr>
+      <tr><td>F-PC16-01</td><td>Registro de recepción de muestras</td><td>Al aceptar las muestras</td></tr>
+      <tr><td>F-PC16-02</td><td>Orden de trabajo</td><td>Durante el trabajo de laboratorio</td></tr>
+      <tr><td>F-PC15-01</td><td>Informe de ensayo</td><td>Al emitir el informe final</td></tr>
+    </tbody>
+  </table>
+  <p>Todos estos documentos se pueden ver y descargar desde el detalle de cada ensayo (ver Capítulo 11).</p>
+</section>
+
+<!-- CAPÍTULO 2 -->
+<section id="cap2" class="page-break">
+  <h2 class="chapter">Capítulo 2 — Cómo ingresar al sistema</h2>
+
+  <h3 class="section" id="s2-1">2.1 Qué necesita antes de empezar</h3>
+  <ul>
+    <li>Un <strong>usuario y contraseña</strong> que le haya entregado el administrador del sistema.</li>
+    <li>Conexión a <strong>internet</strong>.</li>
+    <li>Un navegador actualizado (se recomienda Chrome, Firefox o Edge).</li>
+    <li>La dirección del sistema: <strong>oficina.ctmueble.com.ar</strong>.</li>
+  </ul>
+
+  <h3 class="section" id="s2-2">2.2 Iniciar sesión</h3>
+  <ol class="steps">
+    <li>Abra el sitio e ingrese a la pantalla de <strong>Inicio de sesión</strong>.</li>
+    <li>Escriba su <strong>correo electrónico</strong> y su <strong>contraseña</strong>.</li>
+    <li>Haga clic en <strong>Ingresar</strong>.</li>
+  </ol>
+  <div class="result"><strong>Qué debería ver:</strong> la pantalla principal del sistema, con los menús habilitados según su tipo de usuario.</div>
+
+  <h3 class="section" id="s2-3">2.3 Elegir laboratorio y tipo de acceso</h3>
+  <p>Si pertenece a más de un laboratorio o puede operar como cliente y como laboratorio:</p>
+  <ol class="steps">
+    <li>Vaya a la configuración de su usuario o al selector que aparece en la barra superior.</li>
+    <li>Elija el <strong>laboratorio</strong> con el que trabajará en esta sesión.</li>
+    <li>Si corresponde, cambie al <strong>modo cliente</strong> o al <strong>modo laboratorio</strong>.</li>
+  </ol>
+  <div class="note">Las tareas de recepción de muestras, contratos, informes y configuración solo están disponibles en <strong>modo laboratorio</strong>.</div>
+
+  <h3 class="section" id="s2-4">2.4 Cerrar sesión</h3>
+  <p>Cuando termine su trabajo, use la opción <strong>Salir</strong> del menú de usuario. Así nadie más podrá operar con su cuenta en ese equipo.</p>
+  <p>Si el sistema le avisa que la sesión venció, simplemente vuelva a ingresar con su correo y contraseña.</p>
+
+  <h3 class="section" id="s2-5">2.5 Si no puede ingresar</h3>
+  <table>
+    <thead><tr><th>Qué le ocurre</th><th>Qué puede estar pasando</th><th>Qué hacer</th></tr></thead>
+    <tbody>
+      <tr><td>Usuario o contraseña incorrectos</td><td>Datos mal escritos</td><td>Verifique mayúsculas y vuelva a intentar; si persiste, pida ayuda al administrador</td></tr>
+      <tr><td>Mensaje de demasiados intentos</td><td>Se intentó ingresar muchas veces seguidas</td><td>Espere unos minutos e intente de nuevo</td></tr>
+      <tr><td>No ve ciertos menús</td><td>Está en modo cliente y necesita modo laboratorio</td><td>Cambie el tipo de acceso en configuración de usuario</td></tr>
+      <tr><td>La sesión se cierra sola</td><td>Pasó mucho tiempo sin actividad</td><td>Vuelva a iniciar sesión</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CAPÍTULO 3 -->
+<section id="cap3" class="page-break">
+  <h2 class="chapter">Capítulo 3 — Configuración general del laboratorio</h2>
+
+  <h3 class="section" id="s3-1">3.1 Qué datos se pueden configurar</h3>
+  <p>El sistema guarda los <strong>datos institucionales del laboratorio</strong> que aparecen impresos en contratos, solicitudes e informes: razón social, CUIT, domicilio, teléfono, correo, director, presidente, datos bancarios e incertidumbre de medición, entre otros.</p>
+  <p>Estos datos no son los de cada cliente: son los del <strong>CTM / laboratorio</strong> que firma y emite los documentos.</p>
+  <div class="note">Solo el <strong>personal de laboratorio</strong> puede ver y modificar esta configuración.</div>
+
+  <h3 class="section" id="s3-2">3.2 Dónde encontrar la configuración</h3>
+  <ol class="steps">
+    <li>Ingrese con su usuario de <strong>laboratorio</strong>.</li>
+    <li>Vaya al menú <strong>Configuración</strong> y elija <strong>Datos del laboratorio</strong> (o el nombre equivalente en su pantalla).</li>
+  </ol>
+
+  <h3 class="section" id="s3-3">3.3 Ver los datos actuales</h3>
+  <p>En el listado verá cada dato con su nombre descriptivo y el valor que se usa hoy. Revíselos periódicamente, especialmente antes de emitir contratos o informes.</p>
+
+  <h3 class="section" id="s3-4">3.4 Modificar un dato</h3>
+  <ol class="steps">
+    <li>Seleccione el dato que desea cambiar (por ejemplo, teléfono o director).</li>
+    <li>Escriba el <strong>nuevo valor</strong>. Según el dato, podrá ingresar texto, un número o una fecha.</li>
+    <li>Guarde los cambios.</li>
+  </ol>
+  <div class="result">Los documentos que se generen <em>a partir de ese momento</em> mostrarán la información actualizada. Los PDF ya emitidos no cambian solos.</div>
+
+  <h3 class="section" id="s3-5">3.5 Agregar un dato nuevo</h3>
+  <p>Si el administrador lo permite, puede crear un dato personalizado indicando un nombre claro y su valor. Use esta opción solo cuando el laboratorio lo haya definido como necesario.</p>
+
+  <h3 class="section" id="s3-6">3.6 Quitar un dato personalizado</h3>
+  <p>Solo se pueden eliminar datos que usted haya agregado. Los datos base del laboratorio (razón social, CUIT, etc.) están protegidos y no se pueden borrar.</p>
+
+  <h3 class="section" id="s3-7">3.7 Listado de datos institucionales</h3>
+  <table>
+    <thead><tr><th>Dato</th><th>Para qué se usa</th></tr></thead>
+    <tbody>
+      <tr><td>Razón social del laboratorio</td><td>Encabezados y firmas de documentos</td></tr>
+      <tr><td>CUIT del laboratorio</td><td>Contratos e informes</td></tr>
+      <tr><td>Domicilio, localidad y provincia</td><td>Datos de contacto institucional</td></tr>
+      <tr><td>Presidente y DNI</td><td>Contratos</td></tr>
+      <tr><td>Banco, cuenta y CBU</td><td>Condiciones de pago en contratos</td></tr>
+      <tr><td>Incertidumbre de medición</td><td>Informes de ensayo</td></tr>
+      <tr><td>Director del laboratorio</td><td>Informes y documentos oficiales</td></tr>
+      <tr><td>Teléfono y correo del laboratorio</td><td>Contacto en documentos</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s3-8">3.8 Cómo afectan los cambios a los documentos</h3>
+  <p>Cada vez que el sistema genera un PDF (solicitud, contrato, recepción o informe), toma los datos del ensayo y los combina con estos datos del laboratorio. Por eso conviene verificar que estén correctos <strong>antes</strong> de emitir documentos importantes.</p>
+</section>
+
+<!-- CAPÍTULO 4 -->
+<section id="cap4" class="page-break">
+  <h2 class="chapter">Capítulo 4 — Clientes y empresas</h2>
+  <div class="note"><strong>Importante:</strong> cuando pida un ensayo (Capítulo 5), necesitará tener cargado un cliente. Si aún no existe, siga este capítulo primero.</div>
+
+  <h3 class="section" id="s4-1">4.1 Conceptos básicos</h3>
+  <table>
+    <thead><tr><th>Palabra</th><th>Qué significa en el sistema</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Empresa</strong></td><td>La firma identificada por su CUIT y razón social</td></tr>
+      <tr><td><strong>Dirección</strong></td><td>El domicilio de operaciones; una empresa puede tener más de una</td></tr>
+      <tr><td><strong>Persona</strong></td><td>Alguien con nombre, DNI, teléfono y correo: representante, contacto o tercero</td></tr>
+      <tr><td><strong>Cliente</strong></td><td>La combinación de empresa + dirección + personas + datos de facturación, lista para pedir ensayos</td></tr>
+      <tr><td><strong>Registro histórico</strong></td><td>Al crear un ensayo, el sistema guarda una copia de los datos del cliente tal como estaban ese día; si después cambian los datos del cliente, el ensayo conserva la versión original</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s4-2">4.2 Buscar una empresa por CUIT</h3>
+  <ol class="steps">
+    <li>Vaya al área de <strong>Empresas</strong> o <strong>Clientes</strong>.</li>
+    <li>Escriba el <strong>CUIT</strong> (11 dígitos).</li>
+    <li>Presione <strong>Buscar</strong>.</li>
+  </ol>
+  <p>Si la empresa ya está cargada, verá su razón social, direcciones y clientes asociados.</p>
+
+  <h3 class="section" id="s4-3">4.3 Traer datos desde AFIP</h3>
+  <p>Si la empresa no figura en el sistema pero sí en el padrón de AFIP:</p>
+  <ol class="steps">
+    <li>Busque el CUIT.</li>
+    <li>Elija la opción <strong>Buscar en padrón</strong> o <strong>Sincronizar desde AFIP</strong>.</li>
+    <li>El sistema completará automáticamente la razón social oficial.</li>
+  </ol>
+  <div class="warning">Esta opción funciona para <strong>empresas</strong> (personas jurídicas). Si no encuentra datos, cargue la empresa manualmente (siguiente sección).</div>
+
+  <h3 class="section" id="s4-4">4.4 Cargar una empresa a mano</h3>
+  <ol class="steps">
+    <li>Seleccione <strong>Crear empresa</strong> o <strong>Carga manual</strong>.</li>
+    <li>Complete el <strong>CUIT</strong> y la <strong>razón social</strong>.</li>
+    <li>Guarde.</li>
+  </ol>
+
+  <h3 class="section" id="s4-5">4.5 Administrar direcciones</h3>
+  <p>Con la empresa seleccionada, puede:</p>
+  <ul>
+    <li><strong>Agregar</strong> una dirección nueva: calle y número, localidad, provincia.</li>
+    <li><strong>Modificar</strong> una dirección existente si cambió el domicilio.</li>
+    <li><strong>Quitar</strong> una dirección que ya no se use (si el sistema lo permite).</li>
+  </ul>
+
+  <h3 class="section" id="s4-6">4.6 Representantes y contactos</h3>
+  <p><strong>Representante legal</strong> (opcional): quien firma o representa a la empresa.</p>
+  <p><strong>Contacto del ensayo</strong> (obligatorio al pedir un ensayo): la persona con quien el laboratorio se comunicará sobre ese trámite.</p>
+  <ol class="steps">
+    <li>Complete nombre, DNI, correo y teléfono.</li>
+    <li>Si la persona ya existía, búsquela y selecciónela.</li>
+    <li>Si necesita más de un contacto, vincule contactos adicionales al cliente.</li>
+  </ol>
+
+  <h3 class="section" id="s4-7">4.7 Dar de alta un cliente completo</h3>
+  <ol class="steps">
+    <li>Indique el <strong>CUIT</strong> de la empresa (buscándola o creándola antes).</li>
+    <li>Elija la <strong>dirección</strong> de operaciones.</li>
+    <li>Indique el <strong>representante</strong>, si corresponde.</li>
+    <li>Indique el <strong>contacto principal</strong>.</li>
+    <li>Revise los <strong>datos de facturación</strong> (sección 4.8).</li>
+    <li>Presione <strong>Guardar cliente</strong>.</li>
+  </ol>
+  <div class="result"><strong>Resultado:</strong> el cliente queda disponible para pedir ensayos. Anote o recuerde su nombre en el listado para encontrarlo rápido.</div>
+  <div class="tip">Al pedir un ensayo, el asistente puede guiarlo para crear el cliente en el mismo momento si aún no existía.</div>
+
+  <h3 class="section" id="s4-8">4.8 Datos de facturación distintos</h3>
+  <p>A veces la factura se emite a otro CUIT o domicilio. Puede cargar:</p>
+  <ul>
+    <li>CUIT de facturación (si es distinto al de la empresa)</li>
+    <li>Dirección, localidad y provincia de facturación</li>
+    <li>Si la empresa tributa IVA o no</li>
+  </ul>
+  <p>Estos datos pueden reutilizarse automáticamente al pedir un ensayo.</p>
+
+  <h3 class="section" id="s4-9">4.9 Buscar, modificar o quitar clientes</h3>
+  <ul>
+    <li><strong>Buscar:</strong> por nombre, CUIT o correo desde el listado de clientes.</li>
+    <li><strong>Modificar:</strong> abra el cliente, cambie lo necesario y guarde.</li>
+    <li><strong>Quitar:</strong> solo si el cliente no tiene ensayos en curso que lo impidan.</li>
+  </ul>
+
+  <h3 class="section" id="s4-10">4.10 Clientes favoritos del laboratorio</h3>
+  <p>El personal de laboratorio puede marcar clientes frecuentes como <strong>favoritos</strong> o <strong>agendados</strong> para encontrarlos más rápido al iniciar un trámite.</p>
+</section>
+
+<!-- CAPÍTULO 5 -->
+<section id="cap5" class="page-break">
+  <h2 class="chapter">Capítulo 5 — Pedir un ensayo</h2>
+
+  <h3 class="section" id="s5-1">5.1 Quién puede pedir un ensayo</h3>
+  <p>Tanto un <strong>cliente</strong> como el <strong>personal de laboratorio</strong> pueden cargar una solicitud. El cliente debe estar dado de alta previamente (Capítulo 4) o crearse durante el mismo asistente.</p>
+  <p>Al confirmar, el trámite queda en estado <span class="estado">Solicitado</span> y el sistema genera el papel <strong>F-PC13-01 — Solicitud de ensayo</strong>.</p>
+
+  <h3 class="section" id="s5-2">5.2 Paso 1: Entrar al área de ensayos</h3>
+  <ol class="steps">
+    <li>Desde la pantalla principal, abra el menú <strong>Ensayos</strong>.</li>
+    <li>Si lo desea, filtre la lista por código, estado o fechas para ver trámites anteriores.</li>
+  </ol>
+
+  <h3 class="section" id="s5-3">5.3 Paso 2: Comenzar una solicitud nueva</h3>
+  <p>Presione el botón <strong>Nueva solicitud</strong> o <strong>Crear ensayo</strong>. Se abrirá el formulario paso a paso.</p>
+
+  <h3 class="section" id="s5-4">5.4 Paso 3: Indicar el cliente</h3>
+  <h4 class="subsection">Si el cliente ya está registrado</h4>
+  <ol class="steps">
+    <li>Busque por CUIT o nombre de empresa.</li>
+    <li>Seleccione el cliente correcto de la lista.</li>
+  </ol>
+  <h4 class="subsection">Si el cliente aún no existe</h4>
+  <ol class="steps">
+    <li>Ingrese el CUIT de la empresa.</li>
+    <li>Si hace falta, busque en AFIP o cree la empresa (Capítulo 4).</li>
+    <li>Complete dirección, contacto y facturación.</li>
+    <li>Guarde el cliente y continúe con la solicitud.</li>
+  </ol>
+  <div class="note">Al confirmar la solicitud, el sistema guarda una <strong>copia de los datos del cliente</strong> tal como estaban ese día, para que el documento no cambie aunque después modifique el cliente.</div>
+
+  <h3 class="section" id="s5-5">5.5 Paso 4: Elegir con quién hablará el laboratorio</h3>
+  <ol class="steps">
+    <li>Seleccione la <strong>persona de contacto</strong> para este ensayo.</li>
+    <li>Verifique que el correo y teléfono sean correctos.</li>
+  </ol>
+
+  <h3 class="section" id="s5-6">5.6 Paso 5: Elegir qué tipo de ensayo se necesita</h3>
+  <ol class="steps">
+    <li>Abra el listado de <strong>tipos de ensayo</strong>.</li>
+    <li>Elija el que corresponda al análisis solicitado (por ejemplo, resistencia, humedad, etc.).</li>
+  </ol>
+
+  <h3 class="section" id="s5-7">5.7 Paso 6: Describir el producto o material</h3>
+  <table>
+    <thead><tr><th>Qué completar</th><th>Obligatorio</th><th>Explicación</th></tr></thead>
+    <tbody>
+      <tr><td>Producto o material</td><td>Sí</td><td>Seleccione una plantilla de la lista; trae nombre del producto, fabricante y país de origen</td></tr>
+      <tr><td>Fecha del producto</td><td>Sí</td><td>Fecha de fabricación o referencia del material</td></tr>
+      <tr><td>Número de lote</td><td>No</td><td>Solo si aplica a su producto</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s5-8">5.8 Paso 7: Escribir observaciones</h3>
+  <p>Use este espacio para aclarar cualquier dato relevante: condiciones de conservación, urgencias, referencias comerciales, instrucciones especiales para cuando lleguen las muestras, etc.</p>
+
+  <h3 class="section" id="s5-9">5.9 Paso 8: Completar datos de facturación</h3>
+  <table>
+    <thead><tr><th>Dato</th><th>Obligatorio</th><th>Notas</th></tr></thead>
+    <tbody>
+      <tr><td>CUIT a facturar</td><td>Sí</td><td>Debe ser una empresa ya cargada en el sistema</td></tr>
+      <tr><td>Dirección de facturación</td><td>No</td><td>Puede tomarse del cliente si ya la cargó</td></tr>
+      <tr><td>Importe</td><td>No</td><td>Lo define el laboratorio al armar el contrato; el cliente no lo fija</td></tr>
+      <tr><td>¿Tributa IVA?</td><td>Sí</td><td>Indique sí o no según corresponda</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s5-10">5.10 Paso 9: Revisar y confirmar</h3>
+  <ol class="steps">
+    <li>Lea el resumen de todos los datos ingresados.</li>
+    <li>Corrija cualquier error volviendo al paso correspondiente.</li>
+    <li>Presione <strong>Confirmar</strong> o <strong>Crear solicitud</strong>.</li>
+  </ol>
+  <p>El sistema asignará un <strong>código de seguimiento</strong> (fecha + letra, por ejemplo 20260530A), generará el PDF de solicitud y registrará la acción en el historial.</p>
+
+  <h3 class="section" id="s5-11">5.11 Qué obtiene al finalizar</h3>
+  <div class="result">
+    <ul style="margin:0;padding-left:1.2rem;">
+      <li>El ensayo queda <span class="estado">Solicitado</span>, a la espera de revisión del laboratorio.</li>
+      <li>Recibe un <strong>código de seguimiento</strong> para consultas futuras.</li>
+      <li>Puede descargar el documento <strong>F-PC13-01</strong> desde el detalle del ensayo.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CAPÍTULOS 6 y 7 -->
+<section id="cap6" class="page-break">
+  <h2 class="chapter">Capítulo 6 — Revisar y decidir sobre la solicitud</h2>
+  <p>Este capítulo es para el <strong>personal de laboratorio</strong>.</p>
+
+  <h3 class="section" id="s6-1">6.1 Cuándo puede evaluarse una solicitud</h3>
+  <p>Solo las solicitudes en estado <span class="estado">Solicitado</span> pueden aprobarse o rechazarse. Una vez decidido, el trámite avanza o finaliza según la decisión.</p>
+
+  <h3 class="section" id="s6-2">6.2 Aprobar la solicitud</h3>
+  <ol class="steps">
+    <li>Abra el ensayo desde la lista de solicitudes pendientes.</li>
+    <li>Revise cliente, producto, contacto y facturación.</li>
+    <li>Presione <strong>Aprobar</strong>.</li>
+  </ol>
+  <div class="result">El trámite pasa a <span class="estado">Aprobado</span> y ya puede generarse el contrato (Capítulo 7).</div>
+
+  <h3 class="section" id="s6-3">6.3 Rechazar la solicitud</h3>
+  <ol class="steps">
+    <li>Abra la solicitud.</li>
+    <li>Escriba el <strong>motivo</strong> en observaciones (recomendado).</li>
+    <li>Presione <strong>Rechazar</strong>.</li>
+  </ol>
+  <div class="result">El trámite queda <span class="estado">Rechazado</span> y no continúa.</div>
+
+  <h3 class="section" id="s6-4">6.4 Cancelar un trámite</h3>
+  <p>Si después de aprobar se decide no continuar, puede <strong>cancelar</strong> el ensayo indicando el motivo. Quedará <span class="estado">Cancelado</span>.</p>
+</section>
+
+<section id="cap7" class="page-break">
+  <h2 class="chapter">Capítulo 7 — Armar el contrato de servicio</h2>
+
+  <h3 class="section" id="s7-1">7.1 Qué se necesita antes</h3>
+  <ul>
+    <li>La solicitud debe estar <span class="estado">Aprobada</span>.</li>
+    <li>Debe ingresar con usuario de <strong>laboratorio</strong>.</li>
+  </ul>
+
+  <h3 class="section" id="s7-2">7.2 Paso 1: Abrir la solicitud aprobada</h3>
+  <ol class="steps">
+    <li>Vaya a <strong>Ensayos</strong>.</li>
+    <li>Filtre por estado <span class="estado">Aprobado</span> o busque por código.</li>
+    <li>Abra el ensayo que corresponda.</li>
+  </ol>
+
+  <h3 class="section" id="s7-3">7.3 Paso 2: Completar plazos y precio</h3>
+  <table>
+    <thead><tr><th>Dato</th><th>Qué significa</th></tr></thead>
+    <tbody>
+      <tr><td>Plazo en días</td><td>Cuántos días tiene el laboratorio para realizar el ensayo e informar</td></tr>
+      <tr><td>Precio</td><td>Importe acordado del servicio</td></tr>
+      <tr><td>Días de conservación de muestras</td><td>Cuánto tiempo se guardarán las muestras en el laboratorio</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s7-4">7.4 Paso 3: Generar el contrato</h3>
+  <ol class="steps">
+    <li>Verifique que los tres datos anteriores estén completos.</li>
+    <li>Presione <strong>Generar contrato</strong>.</li>
+  </ol>
+  <p>El sistema crea el documento <strong>F-PC13-02 — Contrato de servicio</strong> y cambia el estado a <span class="estado">Con contrato</span>.</p>
+
+  <h3 class="section" id="s7-5">7.5 Paso 4: Comprobar que quedó registrado</h3>
+  <div class="result">
+    <ul style="margin:0;padding-left:1.2rem;">
+      <li>El ensayo muestra estado <span class="estado">Con contrato</span>.</li>
+      <li>El PDF del contrato está disponible en la sección de documentos.</li>
+      <li>Ya puede coordinarse la entrega de muestras (Capítulo 8).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CAPÍTULOS 8 y 9 -->
+<section id="cap8" class="page-break">
+  <h2 class="chapter">Capítulo 8 — Recibir las muestras en el laboratorio</h2>
+
+  <h3 class="section" id="s8-1">8.1 Qué se necesita antes</h3>
+  <ul>
+    <li>Contrato generado (<span class="estado">Con contrato</span>).</li>
+    <li>Muestras físicas recibidas en el laboratorio.</li>
+    <li>Usuario de <strong>laboratorio</strong>.</li>
+  </ul>
+
+  <h3 class="section" id="s8-2">8.2 Paso 1: Encontrar el ensayo correspondiente</h3>
+  <p>Busque por código de ensayo, nombre del cliente o CUIT hasta localizar el trámite correcto.</p>
+
+  <h3 class="section" id="s8-3">8.3 Paso 2: Abrir la pantalla de recepción</h3>
+  <p>Desde el detalle del ensayo, elija <strong>Recepción de muestras</strong> o <strong>Recibir muestras</strong>.</p>
+
+  <h3 class="section" id="s8-4">8.4 Paso 3: Decidir si se aceptan o no</h3>
+  <p>Indique si las muestras recibidas <strong>cumplen las condiciones</strong> para ser analizadas (estado, embalaje, identificación, cantidad acordada, etc.).</p>
+
+  <h3 class="section" id="s8-5">8.5 Paso 4a: Si no se aceptan las muestras</h3>
+  <ol class="steps">
+    <li>Marque que <strong>no se aceptan</strong>.</li>
+    <li>Escriba el motivo en <strong>observaciones</strong> (muy recomendado).</li>
+    <li>Confirme.</li>
+  </ol>
+  <div class="warning">El ensayo quedará <span class="estado">Cancelado</span>. No se creará orden de trabajo ni se registrarán muestras.</div>
+
+  <h3 class="section" id="s8-6">8.6 Paso 4b: Si se aceptan — cuántas hay</h3>
+  <table>
+    <thead><tr><th>Dato</th><th>Qué indicar</th></tr></thead>
+    <tbody>
+      <tr><td>Cantidad de muestras</td><td>Cuántas piezas se analizarán</td></tr>
+      <tr><td>Cantidad de contramuestras</td><td>Cuántas piezas se guardan de reserva (puede ser cero)</td></tr>
+    </tbody>
+  </table>
+  <p>Debe haber al menos <strong>una muestra o una contramuestra</strong>.</p>
+
+  <h3 class="section" id="s8-7">8.7 Paso 5: Medidas y observaciones</h3>
+  <p>Si corresponde, complete:</p>
+  <ul>
+    <li>Alto, ancho y espesor de las piezas (en centímetros)</li>
+    <li>Si requieren acondicionamiento especial en el laboratorio</li>
+    <li>Observaciones sobre el estado al recibir</li>
+  </ul>
+
+  <h3 class="section" id="s8-8">8.8 Paso 6: Confirmar la recepción</h3>
+  <ol class="steps">
+    <li>Revise cantidades y observaciones.</li>
+    <li>Presione <strong>Confirmar recepción</strong>.</li>
+  </ol>
+
+  <h3 class="section" id="s8-9">8.9 Qué hace el sistema automáticamente</h3>
+  <ul>
+    <li>Crea una <strong>orden de trabajo</strong> con su propio código.</li>
+    <li>Calcula la <strong>fecha límite</strong> para entregar el informe según el plazo del contrato.</li>
+    <li>Registra cada muestra con un número identificatorio.</li>
+    <li>Cambia el ensayo a <span class="estado">En análisis</span>.</li>
+    <li>Genera el documento <strong>F-PC16-01 — Registro de recepción de muestras</strong>.</li>
+    <li>Deja constancia en el historial del trámite.</li>
+  </ul>
+</section>
+
+<section id="cap9" class="page-break">
+  <h2 class="chapter">Capítulo 9 — Cargar los resultados del ensayo</h2>
+
+  <h3 class="section" id="s9-1">9.1 Qué se necesita antes</h3>
+  <ul>
+    <li>Orden de trabajo creada con muestras registradas.</li>
+    <li>Ensayo en estado <span class="estado">En análisis</span>.</li>
+    <li>Usuario de <strong>laboratorio</strong>.</li>
+  </ul>
+
+  <h3 class="section" id="s9-2">9.2 Paso 1: Abrir la orden de trabajo</h3>
+  <ol class="steps">
+    <li>Vaya al menú <strong>Órdenes de trabajo</strong>.</li>
+    <li>Busque por código de orden o de ensayo.</li>
+    <li>Abra el detalle.</li>
+  </ol>
+
+  <h3 class="section" id="s9-3">9.3 Paso 2: Ver las muestras recibidas</h3>
+  <p>En la pantalla verá la lista de muestras con su identificador, si es contramuestra, medidas y estado (pendiente, analizada, etc.).</p>
+
+  <h3 class="section" id="s9-4">9.4 Paso 3: Escribir el resultado de cada muestra</h3>
+  <ol class="steps">
+    <li>Por cada muestra ya analizada en el laboratorio, escriba el <strong>valor numérico del resultado</strong>.</li>
+    <li>Repita para todas las muestras que correspondan.</li>
+  </ol>
+  <div class="tip">No es necesario cargar todas a la vez: puede guardar por tandas y continuar después.</div>
+
+  <h3 class="section" id="s9-5">9.5 Paso 4: Guardar los resultados</h3>
+  <ol class="steps">
+    <li>Revise los valores ingresados.</li>
+    <li>Presione <strong>Guardar resultados</strong>.</li>
+  </ol>
+  <div class="result">El sistema actualiza cada muestra, calcula el <strong>promedio</strong> de la orden y registra la acción en el historial.</div>
+
+  <h3 class="section" id="s9-6">9.6 Qué controles realiza el sistema</h3>
+  <ul>
+    <li>Solo acepta resultados para muestras de esa orden de trabajo.</li>
+    <li>Los valores deben ser números válidos.</li>
+    <li>Solo el personal de laboratorio puede realizar esta tarea.</li>
+  </ul>
+</section>
+
+<!-- CAPÍTULOS 10 y 11 -->
+<section id="cap10" class="page-break">
+  <h2 class="chapter">Capítulo 10 — Emitir el informe final</h2>
+
+  <h3 class="section" id="s10-1">10.1 Qué se necesita antes</h3>
+  <ul>
+    <li>Al menos <strong>dos muestras con resultado cargado</strong> (requisito del laboratorio).</li>
+    <li>Resultados revisados y validados por quien corresponda.</li>
+    <li>Usuario de <strong>laboratorio</strong>.</li>
+  </ul>
+
+  <h3 class="section" id="s10-2">10.2 Paso 1: Revisar que todo esté completo</h3>
+  <ol class="steps">
+    <li>Abra la orden de trabajo.</li>
+    <li>Verifique que las muestras necesarias tienen resultado.</li>
+    <li>Revise el promedio y las observaciones.</li>
+  </ol>
+
+  <h3 class="section" id="s10-3">10.3 Paso 2: Cerrar la orden y emitir el informe</h3>
+  <ol class="steps">
+    <li>Desde la orden de trabajo, presione <strong>Cerrar y emitir informe</strong>.</li>
+    <li>O bien, desde el ensayo, use <strong>Emitir informe</strong>.</li>
+    <li>Confirme la acción.</li>
+  </ol>
+  <p>El sistema genera el documento <strong>F-PC15-01 — Informe de ensayo</strong>, cierra la orden y marca el trámite como <span class="estado">Finalizado</span>.</p>
+
+  <h3 class="section" id="s10-4">10.4 Paso 3: Descargar el informe</h3>
+  <p>Vaya a la sección de documentos del ensayo y descargue el informe en PDF (ver Capítulo 11).</p>
+
+  <h3 class="section" id="s10-5">10.5 Si hay que volver a emitir o hacer una copia</h3>
+  <ul>
+    <li><strong>Copia:</strong> el sistema puede generar una copia numerada del mismo informe.</li>
+    <li><strong>Modificación:</strong> si se corrigieron datos después del primer informe, la nueva emisión se marca como informe modificado.</li>
+  </ul>
+  <p>Ambos casos quedan registrados en el historial del ensayo.</p>
+</section>
+
+<section id="cap11" class="page-break">
+  <h2 class="chapter">Capítulo 11 — Documentos y descargas</h2>
+
+  <h3 class="section" id="s11-1">11.1 Qué documentos puede encontrar</h3>
+  <table>
+    <thead><tr><th>Documento</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td>F-PC13-01</td><td>La solicitud original del ensayo</td></tr>
+      <tr><td>F-PC13-02</td><td>El contrato de servicio</td></tr>
+      <tr><td>F-PC16-01</td><td>El comprobante de recepción de muestras</td></tr>
+      <tr><td>F-PC16-02</td><td>La orden de trabajo del laboratorio</td></tr>
+      <tr><td>F-PC15-01</td><td>El informe final del ensayo</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="section" id="s11-2">11.2 Ver los papeles de un ensayo</h3>
+  <ol class="steps">
+    <li>Abra el ensayo desde la lista.</li>
+    <li>Vaya a la pestaña o sección <strong>Documentos</strong>.</li>
+    <li>Verá cada archivo con su tipo, fecha de generación y botón de descarga.</li>
+  </ol>
+
+  <h3 class="section" id="s11-3">11.3 Descargar un documento</h3>
+  <ol class="steps">
+    <li>En el listado de documentos, presione <strong>Descargar</strong> junto al archivo deseado.</li>
+    <li>El navegador guardará un archivo PDF en su equipo.</li>
+  </ol>
+  <div class="note">Si intenta descargar muchas veces seguidas, el sistema puede pedirle que espere un momento. Esto es normal y evita sobrecarga.</div>
+
+  <h3 class="section" id="s11-4">11.4 Buscar un documento por su tipo</h3>
+  <p>Si solo necesita el informe o el contrato, use el filtro o botón que indique el tipo de documento (por ejemplo, «Descargar informe») sin recorrer toda la lista.</p>
+
+  <h3 class="section" id="s11-5">11.5 Dónde se guardan los archivos</h3>
+  <p>Los PDF quedan almacenados de forma segura en los servidores del CTM. Usted no necesita preocuparse por la ubicación técnica: siempre podrá volver a descargarlos desde el detalle del ensayo mientras tenga permiso de acceso.</p>
+
+  <h3 class="section" id="s11-6">11.6 Vista previa antes de imprimir</h3>
+  <p>El personal de laboratorio puede previsualizar cómo quedará un documento antes de emitirlo definitivamente, útil para revisar datos institucionales o formato.</p>
+</section>
+
+<!-- CAPÍTULOS 12-15 -->
+<section id="cap12" class="page-break">
+  <h2 class="chapter">Capítulo 12 — Historial y seguimiento</h2>
+
+  <h3 class="section" id="s12-1">12.1 Ver qué pasó con un ensayo</h3>
+  <ol class="steps">
+    <li>Abra el ensayo.</li>
+    <li>Ingrese a <strong>Historial</strong> o <strong>Auditoría</strong>.</li>
+    <li>Verá quién realizó cada acción, cuándo y qué cambió.</li>
+  </ol>
+
+  <h3 class="section" id="s12-2">12.2 Ver qué pasó con una orden de trabajo</h3>
+  <p>Desde el detalle de la orden de trabajo existe una sección similar de historial, con foco en recepción de muestras, carga de resultados y emisión de informe.</p>
+
+  <h3 class="section" id="s12-3">12.3 Acciones que quedan registradas</h3>
+  <table>
+    <thead><tr><th>Acción registrada</th><th>Qué significa</th></tr></thead>
+    <tbody>
+      <tr><td>Solicitud creada</td><td>Se cargó el pedido de ensayo</td></tr>
+      <tr><td>Solicitud aprobada / rechazada</td><td>El laboratorio decidió sobre el pedido</td></tr>
+      <tr><td>Contrato generado</td><td>Se formalizó el servicio</td></tr>
+      <tr><td>Muestras recepcionadas</td><td>Se registró la llegada de muestras</td></tr>
+      <tr><td>Resultados cargados</td><td>Se ingresaron valores de ensayo</td></tr>
+      <tr><td>Informe emitido</td><td>Se generó el informe final</td></tr>
+      <tr><td>Ensayo cancelado</td><td>El trámite se detuvo</td></tr>
+      <tr><td>Datos del solicitante modificados</td><td>Se actualizó información del cliente en el ensayo</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="cap13" class="page-break">
+  <h2 class="chapter">Capítulo 13 — Problemas frecuentes</h2>
+  <table>
+    <thead><tr><th>Qué le ocurre</th><th>Por qué puede pasar</th><th>Qué hacer</th></tr></thead>
+    <tbody>
+      <tr><td>No puede realizar una acción</td><td>Su usuario no tiene permiso de laboratorio</td><td>Cambie a modo laboratorio o pida acceso al administrador</td></tr>
+      <tr><td>No encuentra la empresa</td><td>El CUIT no está cargado</td><td>Búsquelo en AFIP o créelo manualmente (Cap. 4)</td></tr>
+      <tr><td>No puede pedir el ensayo</td><td>Falta dar de alta el cliente</td><td>Complete el alta de cliente (Cap. 4.7)</td></tr>
+      <tr><td>No puede generar el contrato</td><td>La solicitud no fue aprobada</td><td>Apruebe la solicitud primero (Cap. 6)</td></tr>
+      <tr><td>No puede recibir muestras</td><td>Aún no hay contrato</td><td>Genere el contrato (Cap. 7)</td></tr>
+      <tr><td>No puede emitir el informe</td><td>Faltan resultados en las muestras</td><td>Cargue al menos dos resultados (Cap. 9)</td></tr>
+      <tr><td>El sistema pide esperar</td><td>Demasiadas descargas seguidas</td><td>Espere unos minutos e intente de nuevo</td></tr>
+      <tr><td>Los documentos muestran datos viejos del laboratorio</td><td>La configuración no fue actualizada</td><td>Revise los datos del laboratorio (Cap. 3) antes de emitir</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="cap14">
+  <h2 class="chapter">Capítulo 14 — Palabras que usa el sistema</h2>
+  <table>
+    <thead><tr><th>Palabra</th><th>Significado sencillo</th></tr></thead>
+    <tbody>
+      <tr><td>CUIT</td><td>Número de identificación fiscal de una empresa (11 dígitos)</td></tr>
+      <tr><td>Ensayo</td><td>El trámite completo: desde el pedido hasta el informe</td></tr>
+      <tr><td>Solicitud</td><td>El pedido inicial de ensayo</td></tr>
+      <tr><td>Orden de trabajo</td><td>La tarea interna del laboratorio una vez recibidas las muestras</td></tr>
+      <tr><td>Muestra</td><td>Cada pieza física que se analiza</td></tr>
+      <tr><td>Contramuestra</td><td>Pieza que se guarda de reserva sin analizarla en el mismo ensayo</td></tr>
+      <tr><td>Código de seguimiento</td><td>Referencia corta del ensayo (fecha + letra) para buscarlo rápido</td></tr>
+      <tr><td>Historial / Auditoría</td><td>Registro de quién hizo qué y cuándo</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="cap15" class="page-break">
+  <h2 class="chapter">Capítulo 15 — Listas de control</h2>
+
+  <h3 class="section">Al dar de alta un cliente</h3>
+  <ul class="checklist">
+    <li>CUIT verificado</li>
+    <li>Dirección cargada</li>
+    <li>Representante y contacto revisados</li>
+    <li>Datos de facturación correctos</li>
+  </ul>
+
+  <h3 class="section">Al pedir un ensayo</h3>
+  <ul class="checklist">
+    <li>Cliente seleccionado o creado</li>
+    <li>Tipo de ensayo y producto completados</li>
+    <li>Contacto y facturación revisados</li>
+    <li>Solicitud F-PC13-01 descargada o archivada</li>
+  </ul>
+
+  <h3 class="section">Contrato y recepción</h3>
+  <ul class="checklist">
+    <li>Solicitud aprobada</li>
+    <li>Contrato F-PC13-02 generado</li>
+    <li>Muestras recepcionadas y comprobante F-PC16-01 generado</li>
+  </ul>
+
+  <h3 class="section">Resultados e informe</h3>
+  <ul class="checklist">
+    <li>Resultado cargado en cada muestra necesaria</li>
+    <li>Orden de trabajo cerrada</li>
+    <li>Informe F-PC15-01 descargado y entregado al cliente</li>
+  </ul>
+</section>
+
+<footer style="margin-top:3rem;padding-top:1rem;border-top:1px solid var(--color-border);font-size:8.5pt;color:var(--color-muted);text-align:center;">
+  Centro Tecnológico del Mueble — Guía de Usuario v1.0 — Mayo 2026
+</footer>
+
+</body>
+</html>

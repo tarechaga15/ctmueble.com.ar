@@ -1,0 +1,17 @@
+.env
+.env.*
+.git
+.github
+certs/
+*.pem
+*.key
+*.crt
+storage/
+src/storage/
+tests/
+docs/
+db/
+*.sql
+*.md
+src/.agents/
+src/.cursor/

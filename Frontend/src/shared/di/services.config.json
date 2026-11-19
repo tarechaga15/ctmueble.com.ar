@@ -1,0 +1,76 @@
+{
+  "services": {
+    "AuthService": {
+      "path": "../../application/services/AuthService",
+      "class": "default",
+      "singleton": false,
+      "dependencies": {
+        "repositories": ["UserRepository", "GoogleAccountRepository"],
+        "domainServices": ["PasswordHasher"],
+        "domainServicesWithFactory": [],
+        "infrastructureServices": ["RedisClient", "JWTService","GoogleStrategy"]
+      }
+    }
+  },
+  "repositories": {
+    "UserRepository": {
+      "path": "../../infrastructure/repositories/UserRepository",
+      "class": "default",
+      "requiresContext": ["sql.query"]
+    },
+    "GoogleAccountRepository": {
+      "path": "../../infrastructure/repositories/GoogleAccountRepository",
+      "class": "default",
+      "requiresContext": ["sql.query"]
+    }
+  },
+  "domainServices": {
+    "PasswordHasher": {
+      "path": "../../domain/services/PasswordHasher",
+      "class": "default",
+      "singleton": true,
+      "dependencies": []
+    }
+  },
+  "infrastructureServices": {
+    "RedisClient": {
+      "path": "../../infrastructure/external/RedisClient",
+      "class": "default",
+      "singleton": true,
+      "factory": "constructor",
+      "factoryParams": [
+        "env:REDIS_HOST||localhost",
+        "env:REDIS_PORT||6379",
+        "env:REDIS_PASS||undefined",
+        "env:REDIS_DB||0"
+      ],
+      "dependencies": []
+    },
+    "GoogleStrategy": {
+      "path": "../../infrastructure/external/GoogleStrategy",
+      "class": "default",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [
+        "env:GOOGLE_CLIENT_ID",
+        "env:GOOGLE_CLIENT_SECRET",
+        "env:GOOGLE_CALLBACK_URL||/auth/google/callback"
+      ],
+      "dependencies": {},
+      "lazy": true
+    },
+    "JWTService": {
+      "path": "../../infrastructure/external/JWTService",
+      "class": "default",
+      "singleton": true,
+      "factory": "constructor",
+      "factoryParams": [
+        "env:JWT_SECRET",
+        "env:JWT_EXPIRES_IN||8h",
+        "env:JWT_REFRESH_EXPIRES_IN||7d"
+      ],
+      "dependencies": []
+    }
+  },
+  "clusters": {}
+}

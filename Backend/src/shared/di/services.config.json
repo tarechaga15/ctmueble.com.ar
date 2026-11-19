@@ -1,0 +1,265 @@
+{
+  "services": {
+    "EssayService": {
+      "path": "../../application/essays/services/EssayApplicationService",
+      "class": "EssayApplicationService",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {
+        "domainServices": ["EssayDomainService", "EssayPermissionService"],
+        "domainEntities": ["Essay"],
+        "repositories": ["EssayRepository", "ClientRepository", "PersonRepository", "DocumentRepository", "SampleRepository"],
+        "applicationServices": ["DocumentService", "EssayAuditLogService"]
+      }
+    },
+    "ClientService": {
+      "path": "../../application/clients/services/ClientApplicationService",
+      "class": "ClientApplicationService",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {
+        "applicationServices": ["PersonService"],
+        "domainEntities": ["Client"],
+        "domainServices": ["ClientOriginService"],
+        "repositories": ["ClientRepository", "BusinessRepository"]
+      }
+    },
+    "PersonService": {
+      "path": "../../application/persons/services/PersonApplicationService",
+      "class": "PersonApplicationService",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {
+        "domainEntities": ["Person"],
+        "domainServices": ["PersonValidationService"],
+        "repositories": ["PersonRepository"]
+      }
+    },
+    "BusinessService": {
+      "path": "../../application/business/services/BusinessApplicationService",
+      "class": "BusinessApplicationService",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {
+        "domainEntities": ["Business"],
+        "domainServices": ["AddressOriginService"],
+        "repositories": ["BusinessRepository"],
+        "infrastructureServices": ["PadronService"],
+        "applicationServices": ["PersonService"]
+      }
+    },
+    "UserService": {
+      "path": "../../application/users/services/UserApplicationService",
+      "class": "UserApplicationService",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {
+        "repositories": ["UserRepository"]
+      }
+    },
+    "EnvService": {
+      "path": "../../application/env/services/EnvApplicationService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "DocumentService": {
+      "path": "../../application/documents/services/DocumentApplicationService",
+      "class": "DocumentApplicationService",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {
+        "repositories": ["DocumentRepository"],
+        "infrastructureServices": ["DocumentInfrastructureService", "HandlebarsService"],
+        "applicationServices": ["EnvService"]
+      }
+    },
+    "EssayAuditLogService": {
+      "path": "../../application/essays/services/EssayAuditLogApplicationService",
+      "class": "EssayAuditLogApplicationService",
+      "singleton": false,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {
+        "domainEntities": ["EssayAuditLog"],
+        "repositories": ["EssayAuditLogRepository", "UserRepository"]
+      }
+    }
+  },
+  "repositories": {
+    "EssayRepository": {
+      "path": "../../infrastructure/repositories/essays/EssayRepository",
+      "class": "default",
+      "requiresContext": []
+    },
+    "SampleRepository": {
+      "path": "../../infrastructure/repositories/essays/SampleRepository",
+      "class": "default",
+      "requiresContext": []
+    },
+    "ClientRepository": {
+      "path": "../../infrastructure/repositories/clients/ClientRepository",
+      "class": "default",
+      "requiresContext": []
+    },
+    "PersonRepository": {
+      "path": "../../infrastructure/repositories/persons/PersonRepository",
+      "class": "default",
+      "requiresContext": []
+    },
+    "BusinessRepository": {
+      "path": "../../infrastructure/repositories/business/BusinessRepository",
+      "class": "default",
+      "requiresContext": []
+    },
+    "UserRepository": {
+      "path": "../../infrastructure/repositories/users/UserRepository",
+      "class": "default",
+      "requiresContext": []
+    },
+    "DocumentRepository": {
+      "path": "../../infrastructure/repositories/documents/DocumentRepository",
+      "class": "default",
+      "requiresContext": []
+    },
+    "EssayAuditLogRepository": {
+      "path": "../../infrastructure/repositories/essays/EssayAuditLogRepository",
+      "class": "default",
+      "requiresContext": []
+    }
+  },
+  "domainServices": {
+    "EssayPermissionService": {
+      "path": "../../domain/essays/services/EssayService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "EssayDomainService": {
+      "path": "../../domain/essays/services/EssayService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "SampleDomainService": {
+      "path": "../../domain/essays/services/SampleService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "ClientOriginService": {
+      "path": "../../domain/clients/services/ClientOriginService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "PersonValidationService": {
+      "path": "../../domain/persons/services/PersonValidationService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "AddressOriginService": {
+      "path": "../../domain/business/services/AddressOriginService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "UserPermissionService": {
+      "path": "../../domain/users/services/UserPermissionService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    }
+  },
+  "domainEntities": {
+    "Essay": {
+      "path": "../../domain/essays/entities/Essay",
+      "class": "default"
+    },
+    "Sample": {
+      "path": "../../domain/essays/entities/Sample",
+      "class": "default"
+    },
+    "Client": {
+      "path": "../../domain/clients/entities/Client",
+      "class": "default"
+    },
+    "Person": {
+      "path": "../../domain/persons/entities/Person",
+      "class": "default"
+    },
+    "Business": {
+      "path": "../../domain/business/entities/Business",
+      "class": "default"
+    },
+    "User": {
+      "path": "../../domain/users/entities/User",
+      "class": "default"
+    },
+    "Document": {
+      "path": "../../domain/documents/entities/Document",
+      "class": "default"
+    },
+    "EssayAuditLog": {
+      "path": "../../domain/essays/entities/EssayAuditLog",
+      "class": "default"
+    }
+  },
+  "infrastructureServices": {
+    "DocumentInfrastructureService": {
+      "path": "../../infrastructure/documents/services/DocumentInfrastructureService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "PadronService": {
+      "path": "../../infrastructure/arca/services/PadronService",
+      "class": "default",
+      "singleton": true,
+      "factory": "constructor",
+      "factoryParams": [],
+      "dependencies": {}
+    },
+    "ArcaConnection": {
+      "path": "../../infrastructure/arca/services/ArcaConnection",
+      "class": "default",
+      "singleton": true,
+      "factory": "constructor",
+      "factoryParams": [
+        "env:ARCA_CUIT",
+        "env:ARCA_SERVICE||ws_sr_padron_a13",
+        "env:ARCA_CERT_FILE",
+        "env:ARCA_KEY_FILE",
+        "context:logger",
+        "infrastructureService:RedisClient"
+      ],
+      "dependencies": {}
+    },
+    "HandlebarsService": {
+      "path": "../../infrastructure/templates/HandlebarsService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "JWTService": {
+      "path": "../../infrastructure/auth/services/JWTService",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    },
+    "RedisClient": {
+      "path": "../../infrastructure/redis/RedisClient",
+      "class": "default",
+      "singleton": true,
+      "dependencies": {}
+    }
+  },
+  "clusters": {}
+}
